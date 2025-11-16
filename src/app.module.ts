@@ -18,6 +18,7 @@ import { AuthModule } from './domains/auth/auth.module';
 import { CustomersModule } from './domains/customers/customers.module';
 import { NotificationsModule } from './domains/notifications/notifications.module';
 import { SharedModule } from './domains/shared/shared.module';
+import { SuppliersModule } from './domains/suppliers/suppliers.module';
 import { UploadsModule } from './domains/uploads/uploads.module';
 import { WebhooksModule } from './domains/webhooks/webhooks.module';
 import { JwtOrApiKeyGuard } from './guards/jwt-or-api-key.guard';
@@ -77,6 +78,7 @@ import { ValidatorsModule } from './validators/validators.module';
     NotificationsModule,
     HttpModule.register({ global: true }),
     CustomersModule,
+    SuppliersModule,
   ],
   controllers: [AppController],
   providers: [
