@@ -3,6 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { BaseDto } from '@/common/dto/base.dto';
 
 import { Customer } from '../entities/customer.entity';
+import { CustomerStatus, customerStatus } from '../types';
 
 export class CustomerDto extends BaseDto {
   @ApiProperty({
@@ -30,6 +31,12 @@ export class CustomerDto extends BaseDto {
   phone_number: string;
 
   @ApiProperty({
+    examples: Object.values(customerStatus),
+    description: 'The status of the customer',
+  })
+  status: CustomerStatus;
+
+  @ApiProperty({
     example: '123 Main St, Anytown, USA',
     description: 'The address of the customer',
   })
@@ -48,6 +55,8 @@ export class CustomerDto extends BaseDto {
     this.last_name = customer.last_name;
     this.email = customer.email;
     this.phone_number = customer.phone_number;
+    this.status = customer.status;
     this.address = customer.address;
+    this.state = customer.state;
   }
 }
