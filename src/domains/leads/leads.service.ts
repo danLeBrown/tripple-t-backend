@@ -20,9 +20,6 @@ import {
 import { slugify } from '@/helpers/string.helper';
 
 import { UsersService } from '../auth/users/users.service';
-import { Client } from '../clients/entities/client.entity';
-import { ActivitiesService } from '../shared/activities/activities.service';
-import { CreateActivityWithoutResourceDto } from '../shared/activities/dto/create-activity.dto';
 import { DocumentsService } from '../shared/documents/documents.service';
 import { CreateTagWithoutResourceDto } from '../shared/tags/dto/create-tag.dto';
 import { TagsService } from '../shared/tags/tags.service';
@@ -34,7 +31,6 @@ import {
 } from './dto/query-and-paginate-lead.dto';
 import { UpdateLeadDto } from './dto/update-lead.dto';
 import { Lead } from './entities/lead.entity';
-import { LeadsUpdatedEvent } from './listeners/leads-updated.listener';
 import { LeadStatus } from './types';
 
 @Injectable()
@@ -44,7 +40,6 @@ export class LeadsService {
     private repo: Repository<Lead>,
     private usersService: UsersService,
     private tagsService: TagsService,
-    private activitiesService: ActivitiesService,
     private documentsService: DocumentsService,
     private eventEmitter: EventEmitter2,
   ) {}
@@ -248,7 +243,6 @@ export class LeadsService {
         ? {
             admin_user: true,
             tags: true,
-            activities: true,
             documents: true,
           }
         : undefined,
@@ -300,12 +294,12 @@ export class LeadsService {
 
     const exe = await this.repo.update(id, dto);
 
-    await this.eventEmitter.emitAsync('lead.updated', {
-      lead: await this.repo.findOneByOrFail({
-        id,
-      }),
-      dto,
-    } satisfies LeadsUpdatedEvent);
+    // await this.eventEmitter.emitAsync('lead.updated', {
+    //   lead: await this.repo.findOneByOrFail({
+    //     id,
+    //   }),
+    //   dto,
+    // } satisfies LeadsUpdatedEvent);
 
     return exe;
   }
@@ -337,24 +331,6 @@ export class LeadsService {
           resource_name: 'leads',
         });
       }),
-    );
-  }
-
-  async createActivities(id: string, dtos: CreateActivityWithoutResourceDto[]) {
-    const lead = await this.repo.findOne({ where: { id } });
-
-    if (!lead) {
-      throw new NotFoundException('Lead not found');
-    }
-
-    return Promise.all(
-      dtos.map(async (dto) =>
-        this.activitiesService.create({
-          ...dto,
-          resource_id: id,
-          resource_name: 'leads',
-        }),
-      ),
     );
   }
 
@@ -404,19 +380,5 @@ export class LeadsService {
     });
 
     return this.documentsService.delete(document.id);
-  }
-
-  async getUnassigned(query: SearchAndPaginateLeadDto) {
-    const clients = await this.repo
-      .createQueryBuilder()
-      .select('client.lead_id')
-      .from(Client, 'client')
-      .where('client.lead_id IS NOT NULL')
-      .getMany();
-
-    return this.search({
-      ...query,
-      ids_to_filter: clients.map((client) => client.lead_id ?? ''),
-    });
   }
 }

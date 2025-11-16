@@ -68,8 +68,12 @@ export class CreateCustomersTable1763294253302 implements MigrationInterface {
 
   private indices = [
     new TableIndex({
-      name: 'idx_customers_first_last_name',
-      columnNames: ['first_name', 'last_name'],
+      name: 'idx_customers_first_name',
+      columnNames: ['first_name'],
+    }),
+    new TableIndex({
+      name: 'idx_customers_last_name',
+      columnNames: ['last_name'],
     }),
     new TableIndex({
       name: 'idx_customers_email',

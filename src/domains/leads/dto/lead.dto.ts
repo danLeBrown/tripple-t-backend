@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 import { UserDto } from '@/domains/auth/users/dto/user.dto';
-import { ActivityDto } from '@/domains/shared/activities/dto/activity.dto';
 import { DocumentDto } from '@/domains/shared/documents/dto/document.dto';
 import { TagDto } from '@/domains/shared/tags/dto/tag.dto';
 
@@ -10,8 +9,6 @@ import { Lead } from '../entities/lead.entity';
 import {
   LeadProduct,
   leadProduct,
-  LeadScoreTag,
-  leadScoreTag,
   LeadSource,
   leadSource,
   LeadStatus,
@@ -71,12 +68,6 @@ export class LeadDto extends BaseDto {
   product?: LeadProduct;
 
   @ApiProperty({
-    example: leadScoreTag.Hot,
-    nullable: true,
-  })
-  score_tag?: LeadScoreTag;
-
-  @ApiProperty({
     example: 'Interested in our services',
     nullable: true,
   })
@@ -111,12 +102,6 @@ export class LeadDto extends BaseDto {
   })
   documents?: DocumentDto[];
 
-  @ApiProperty({
-    type: [ActivityDto],
-    nullable: true,
-  })
-  activities?: ActivityDto[];
-
   constructor(lead: Lead) {
     super(lead);
     this.admin_user_id = lead.admin_user_id;
@@ -128,7 +113,6 @@ export class LeadDto extends BaseDto {
     this.status = lead.status;
     this.source = lead.source;
     this.product = lead.product;
-    this.score_tag = lead.score_tag;
     this.notes = lead.notes;
     this.last_contacted_at = lead.last_contacted_at;
     this.next_follow_up_at = lead.next_follow_up_at;
@@ -144,13 +128,5 @@ export class LeadDto extends BaseDto {
     if (lead.documents) {
       this.documents = DocumentDto.collection(lead.documents);
     }
-
-    if (lead.activities) {
-      this.activities = ActivityDto.collection(lead.activities);
-    }
   }
-
-  // static collection(leads: Lead[]): LeadDto[] {
-  //   return leads.map((lead) => new LeadDto(lead));
-  // }
 }

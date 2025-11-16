@@ -1,8 +1,6 @@
 import { MigrationInterface, QueryRunner, TableColumn } from 'typeorm';
 
 export class AddLoginAtToUsers1756994378113 implements MigrationInterface {
-  name?: string | undefined;
-  transaction?: boolean | undefined;
   private tableName = 'users';
 
   private columns = [

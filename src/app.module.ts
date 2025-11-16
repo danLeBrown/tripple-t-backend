@@ -12,13 +12,10 @@ import { AppService } from './app.service';
 import { AppConfigsModule } from './app-configs/app-config.module';
 import { AppConfigService } from './app-configs/app-config.service';
 import { AppDataSource } from './data-source';
-import { AnalyticsModule } from './domains/analytics/analytics.module';
 import { AuditLogsModule } from './domains/audit-logs/dto/audit-logs.module';
 import { AuditLogInterceptor } from './domains/audit-logs/interceptors/audit-log.interceptor';
 import { AuthModule } from './domains/auth/auth.module';
-import { ClientsModule } from './domains/clients/clients.module';
 import { CustomersModule } from './domains/customers/customers.module';
-import { LeadsModule } from './domains/leads/leads.module';
 import { NotificationsModule } from './domains/notifications/notifications.module';
 import { SharedModule } from './domains/shared/shared.module';
 import { UploadsModule } from './domains/uploads/uploads.module';
@@ -71,13 +68,11 @@ import { ValidatorsModule } from './validators/validators.module';
     RedisModule,
     ValidatorsModule,
     AuthModule,
-    LeadsModule,
-    ClientsModule,
     SharedModule,
     UploadsModule,
     AuditLogsModule,
     WebhooksModule,
-    AnalyticsModule,
+    // AnalyticsModule,
     TaskSchedulerModule,
     NotificationsModule,
     HttpModule.register({ global: true }),

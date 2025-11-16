@@ -2,19 +2,12 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 import { SetDto } from '@/decorators/set-dto.decorator';
 import { User } from '@/domains/auth/users/entities/user.entity';
-import { Activity } from '@/domains/shared/activities/entities/activity.entity';
 import { Document } from '@/domains/shared/documents/entities/document.entity';
 import { Tag } from '@/domains/shared/tags/entities/tag.entity';
 
 import { BaseEntity } from '../../../common/base.entity';
 import { LeadDto } from '../dto/lead.dto';
-import {
-  LeadProduct,
-  LeadScoreTag,
-  LeadSource,
-  LeadStatus,
-  leadStatus,
-} from '../types';
+import { LeadProduct, LeadSource, LeadStatus, leadStatus } from '../types';
 
 @Entity({ name: 'leads' })
 @SetDto(LeadDto)
@@ -46,9 +39,6 @@ export class Lead extends BaseEntity<LeadDto> {
   @Column({ type: 'varchar', length: 255, nullable: true })
   product: LeadProduct;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  score_tag: LeadScoreTag;
-
   @Column({ type: 'text', nullable: true })
   notes?: string;
 
@@ -64,9 +54,6 @@ export class Lead extends BaseEntity<LeadDto> {
 
   @OneToMany(() => Tag, (tag) => tag.lead)
   tags?: Tag[];
-
-  @OneToMany(() => Activity, (activity) => activity.lead)
-  activities?: Activity[];
 
   @OneToMany(() => Document, (document) => document.lead)
   documents?: Document[];

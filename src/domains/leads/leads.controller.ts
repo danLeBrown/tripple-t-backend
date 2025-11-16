@@ -23,8 +23,6 @@ import {
 import { PaginatedDto } from '@/common/dto/paginated.dto';
 
 import { AuditLog } from '../../decorators/audit-log.decorator';
-import { ActivityDto } from '../shared/activities/dto/activity.dto';
-import { CreateActivityWithoutResourceDto } from '../shared/activities/dto/create-activity.dto';
 import { DocumentDto } from '../shared/documents/dto/document.dto';
 import { CreateTagWithoutResourceDto } from '../shared/tags/dto/create-tag.dto';
 import { TagDto } from '../shared/tags/dto/tag.dto';
@@ -99,32 +97,6 @@ export class LeadsController {
 
     return {
       data: TagDto.collection(data),
-    };
-  }
-
-  @ApiExtraModels(CreateActivityWithoutResourceDto)
-  @ApiBody({
-    type: [CreateActivityWithoutResourceDto],
-    description: 'Array of activities to be created for the lead',
-    required: true,
-  })
-  @ApiOkResponse({
-    description: 'Lead Activities created',
-    type: [ActivityDto],
-  })
-  @AuditLog({
-    action: 'Create activities for lead',
-  })
-  @Post(':id/activities')
-  async createActivities(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body(new ParseArrayPipe({ items: CreateActivityWithoutResourceDto }))
-    dto: CreateActivityWithoutResourceDto[],
-  ) {
-    const data = await this.leadsService.createActivities(id, dto);
-
-    return {
-      data: ActivityDto.collection(data),
     };
   }
 
@@ -294,39 +266,6 @@ export class LeadsController {
     return {
       data,
     };
-  }
-
-  @ApiOkResponse({
-    description: 'Unassigned leads retrieved successfully',
-    schema: {
-      allOf: [
-        { $ref: getSchemaPath(PaginatedDto) },
-        {
-          properties: {
-            data: {
-              type: 'array',
-              items: { $ref: getSchemaPath(LeadDto) },
-            },
-          },
-        },
-      ],
-    },
-  })
-  @AuditLog({
-    action: 'Get unassigned leads',
-  })
-  @Get('unassigned')
-  async getUnassigned(
-    @Query()
-    query: SearchAndPaginateLeadDto,
-  ) {
-    const [leads, total] = await this.leadsService.getUnassigned(query);
-
-    return new PaginatedDto(LeadDto.collection(leads), {
-      total,
-      limit: query.limit ?? 0,
-      page: query.page ?? 0,
-    });
   }
 
   @ApiOkResponse({

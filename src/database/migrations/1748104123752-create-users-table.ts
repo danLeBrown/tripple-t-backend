@@ -68,22 +68,34 @@ export class CreateUsersTable1748104123752 implements MigrationInterface {
 
   private indices = [
     new TableIndex({
-      name: 'idx_first_name',
+      name: 'idx_users_first_name',
       columnNames: ['first_name'],
     }),
     new TableIndex({
-      name: 'idx_last_name',
+      name: 'idx_users_last_name',
       columnNames: ['last_name'],
     }),
     new TableIndex({
-      name: 'idx_email',
+      name: 'idx_users_email',
       columnNames: ['email'],
       isUnique: true,
     }),
     new TableIndex({
-      name: 'idx_phone_number',
+      name: 'idx_users_phone_number',
       columnNames: ['phone_number'],
       isUnique: true,
+    }),
+    new TableIndex({
+      name: 'idx_users_status',
+      columnNames: ['status'],
+    }),
+    new TableIndex({
+      name: 'idx_users_is_admin',
+      columnNames: ['is_admin'],
+    }),
+    new TableIndex({
+      name: 'idx_users_created_at',
+      columnNames: ['created_at'],
     }),
   ];
 

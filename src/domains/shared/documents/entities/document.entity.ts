@@ -1,7 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 
 import { SetDto } from '@/decorators/set-dto.decorator';
-import { Client } from '@/domains/clients/entities/client.entity';
 import { Lead } from '@/domains/leads/entities/lead.entity';
 import { Upload } from '@/domains/uploads/entities/upload.entity';
 
@@ -27,8 +26,4 @@ export class Document extends BaseEntity<DocumentDto> {
   @ManyToOne(() => Lead)
   @JoinColumn({ name: 'resource_id', referencedColumnName: 'id' })
   lead?: Lead;
-
-  @ManyToOne(() => Client)
-  @JoinColumn({ name: 'resource_id', referencedColumnName: 'id' })
-  client?: Client;
 }
