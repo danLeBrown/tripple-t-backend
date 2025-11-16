@@ -1,0 +1,95 @@
+services:
+  # Your NestJS application
+  app:
+    build:
+      context: .
+      target: development # Use development stage for local dev
+    restart: unless-stopped
+    depends_on:
+      - pgsql
+      - redis
+    ports:
+      - '${APP_PORT:-3000}:3000'
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=pgsql
+      - DB_PORT=5432
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=${DB_DATABASE}
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      # Mount source code for hot reload
+      - .:/app
+      # Prevent node_modules from being overwritten
+      - /app/node_modules
+      # Optional: mount pnpm cache for faster rebuilds
+      - ~/.pnpm-store:/root/.pnpm-store
+    networks:
+      - connect_crm_network
+    # Optional: add healthcheck
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3000/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Production version of your app (commented out for dev)
+  # app-prod:
+  #   build:
+  #     context: .
+  #     target: production
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - pgsql
+  #     - redis
+  #   ports:
+  #     - "${APP_PORT:-3000}:3000"
+  #   environment:
+  #     - NODE_ENV=production
+  #     - DB_HOST=pgsql
+  #     - DB_PORT=5432
+  #     - DB_USERNAME=${DB_USERNAME}
+  #     - DB_PASSWORD=${DB_PASSWORD}
+  #     - DB_DATABASE=${DB_DATABASE}
+  #     - REDIS_URL=redis://redis:6379
+  #   networks:
+  #     - connect_crm_network
+
+  adminer:
+    image: adminer
+    restart: always
+    depends_on:
+      - pgsql
+    ports:
+      - 8080:8080
+    networks:
+      - connect_crm_network
+
+  pgsql:
+    image: 'postgres:17-alpine3.22'
+    restart: always
+    environment:
+      POSTGRES_USER: '${DB_USERNAME}'
+      POSTGRES_PASSWORD: '${DB_PASSWORD}'
+      POSTGRES_DB: '${DB_DATABASE}'
+    ports:
+      - '${DB_PORT}:5432'
+    volumes:
+      - connect_crm:/var/lib/postgresql/data
+    networks:
+      - connect_crm_network
+
+  redis:
+    image: 'redis:6.2.19-alpine'
+    ports:
+      - '6379:6379'
+    networks:
+      - connect_crm_network
+
+volumes:
+  connect_crm:
+
+networks:
+  connect_crm_network:
+    driver: bridge
