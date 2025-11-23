@@ -124,6 +124,6 @@ export class SuppliersService {
   async update(id: string, dto: UpdateSupplierDto) {
     const supplier = await this.findOneByOrFail({ id });
 
-    this.repo.update(supplier.id, dto);
+    return this.repo.update(supplier.id, dto);
   }
 }

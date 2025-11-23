@@ -48,7 +48,7 @@ export class ExpensesService {
 
     if (search_query) {
       qb.where(
-        'LOWER(expense.narration) LIKE :search_query OR LOWER(expense.amount) LIKE :search_query',
+        'LOWER(expense.narration) LIKE :search_query OR CAST(expense.amount AS TEXT) LIKE :search_query',
       ).setParameter('search_query', `%${search_query.toLowerCase()}%`);
     }
 
@@ -81,7 +81,7 @@ export class ExpensesService {
     const expense = await this.findOneBy(query);
 
     if (!expense) {
-      throw new NotFoundException('Expense  not found');
+      throw new NotFoundException('Expense not found');
     }
 
     return expense;
@@ -90,6 +90,6 @@ export class ExpensesService {
   async update(id: string, dto: UpdateExpenseDto) {
     const expense = await this.findOneByOrFail({ id });
 
-    this.repo.update(expense.id, dto);
+    return this.repo.update(expense.id, dto);
   }
 }
