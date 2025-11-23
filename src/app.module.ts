@@ -16,6 +16,7 @@ import { AuditLogsModule } from './domains/audit-logs/dto/audit-logs.module';
 import { AuditLogInterceptor } from './domains/audit-logs/interceptors/audit-log.interceptor';
 import { AuthModule } from './domains/auth/auth.module';
 import { CustomersModule } from './domains/customers/customers.module';
+import { ExpensesModule } from './domains/expenses/expenses.module';
 import { NotificationsModule } from './domains/notifications/notifications.module';
 import { SharedModule } from './domains/shared/shared.module';
 import { SuppliersModule } from './domains/suppliers/suppliers.module';
@@ -79,6 +80,7 @@ import { ValidatorsModule } from './validators/validators.module';
     HttpModule.register({ global: true }),
     CustomersModule,
     SuppliersModule,
+    ExpensesModule,
   ],
   controllers: [AppController],
   providers: [
