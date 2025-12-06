@@ -52,7 +52,6 @@ jobs:
           cp -r dist/ deployment/
           cp package.json deployment/
           cp pnpm-lock.yaml deployment/
-          cp ormconfig.js deployment/
           cp seeding-source.js deployment/
 
           # Optional - include other necessary files
