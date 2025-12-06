@@ -24,9 +24,9 @@ describe('AuditLogsController (e2e)', () => {
     await Promise.all([app.close(), ...containers.map((c) => c.stop())]);
   });
 
-  describe('it should fetch the leads so an audit log is recorded', () => {
-    it('/leads (GET)', (done) => {
-      request.get('/v1/leads').expect(200, done);
+  describe('it should fetch the sizes so an audit log is recorded', () => {
+    it('/sizes/search (GET)', (done) => {
+      request.get('/v1/sizes/search').expect(200, done);
     });
   });
 

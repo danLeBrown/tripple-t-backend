@@ -105,9 +105,8 @@ describe('SizesController (e2e)', () => {
     it('/search (GET)', (done) => {
       request
         .get('/v1/sizes/search?query=42')
-        // .expect(200)
+        .expect(200)
         .end((err, res) => {
-          console.log(res.body);
           if (err) {
             return done(err);
           }
