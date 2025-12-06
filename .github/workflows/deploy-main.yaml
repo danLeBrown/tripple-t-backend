@@ -91,7 +91,7 @@ jobs:
             pnpm install --prod
 
             # Run migrations
-            npm run migration:run
+            npm run migration:prod:run
 
             # Restart the application
             pm2 restart tripplet
