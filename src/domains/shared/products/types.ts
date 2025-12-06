@@ -1,8 +1,8 @@
 export const productType = {
-  Bottle: 'bottle',
-  Preform: 'preform',
-  Cap: 'cap',
-  Nylon: 'nylon',
-};
+  Bottle: 'Bottle',
+  Preform: 'Preform',
+  Cap: 'Cap',
+  Nylon: 'Nylon',
+} as const;
 
 export type ProductType = (typeof productType)[keyof typeof productType];
