@@ -190,7 +190,7 @@ describe('SizesController (e2e)', () => {
       request.patch(`/v1/sizes/${faker.string.uuid()}`, req).expect(404, done);
     });
 
-    describe('it should throw an error if you try to update a size with an existing name or symbol', () => {
+    describe('it should throw an error if you try to update a size with an existing value', () => {
       let new_size_id: string;
 
       beforeAll(async () => {
@@ -201,7 +201,7 @@ describe('SizesController (e2e)', () => {
         new_size_id = l.id;
       });
 
-      it('should throw an error if you try to update a size with an existing name or symbol', (done) => {
+      it('should throw an error if you try to update a size with an existing value', (done) => {
         const req = {
           value: 44,
         } satisfies UpdateSizeDto;

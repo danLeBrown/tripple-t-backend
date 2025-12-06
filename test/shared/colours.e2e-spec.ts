@@ -189,7 +189,7 @@ describe('ColoursController (e2e)', () => {
         .expect(404, done);
     });
 
-    describe('it should throw an error if you try to update a colour with an existing name or symbol', () => {
+    describe('it should throw an error if you try to update a colour with an existing name', () => {
       let new_colour_id: string;
 
       beforeAll(async () => {

@@ -192,7 +192,7 @@ describe('UnitsController (e2e)', () => {
       request.patch(`/v1/units/${faker.string.uuid()}`, req).expect(404, done);
     });
 
-    describe('it should throw an error if you try to update a unit with an existing name or symbol', () => {
+    describe('it should throw an error if you try to update a unit with an existing name', () => {
       let new_unit_id: string;
 
       beforeAll(async () => {
@@ -204,10 +204,9 @@ describe('UnitsController (e2e)', () => {
         new_unit_id = l.id;
       });
 
-      it('should throw an error if you try to update a unit with an existing name or symbol', (done) => {
+      it('should throw an error if you try to update a unit with an existing name', (done) => {
         const req = {
           name: unit.name,
-          symbol: unit.symbol,
         } satisfies UpdateUnitDto;
         request.patch(`/v1/units/${new_unit_id}`, req).expect(400, done);
       });
