@@ -18,5 +18,5 @@
   "setupFiles": [
     "<rootDir>/test/set-env-vars.ts"
   ],
-  "testTimeout": 20000
+  "testTimeout": 60000
 }

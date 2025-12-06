@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { BaseDto } from '@/common/dto/base.dto';
-
+import { BaseDto } from '../../../../common/dto/base.dto';
 import { Size } from '../entities/size.entity';
 
 export class SizeDto extends BaseDto {
@@ -10,6 +9,7 @@ export class SizeDto extends BaseDto {
     example: 42,
   })
   value: number;
+
   constructor(size: Size) {
     super(size);
 

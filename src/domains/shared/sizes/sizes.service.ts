@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getUnixTime } from 'date-fns/getUnixTime';
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { FindOptionsWhere, Not, Repository } from 'typeorm';
 
 import { CreateSizeDto } from './dto/create-size.dto';
 import { SearchAndPaginateSizeDto } from './dto/query-and-paginate-size.dto';
@@ -47,7 +47,7 @@ export class SizesService {
     const qb = this.repo.createQueryBuilder('size');
 
     if (search_query) {
-      qb.where('LOWER(size.value) LIKE :search_query').setParameter(
+      qb.where('CAST(size.value AS TEXT) LIKE :search_query').setParameter(
         'search_query',
         `%${search_query.toLowerCase()}%`,
       );
@@ -93,6 +93,14 @@ export class SizesService {
 
   async update(id: string, dto: UpdateSizeDto) {
     const size = await this.findOneByOrFail({ id });
+
+    const exists = await this.repo.exists({
+      where: { value: dto.value, id: Not(id) },
+    });
+
+    if (exists) {
+      throw new BadRequestException('Size with this value already exists');
+    }
 
     return this.repo.update(size.id, dto);
   }

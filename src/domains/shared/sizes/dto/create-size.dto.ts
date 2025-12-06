@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber } from 'class-validator';
+import { IsNumber, IsPositive } from 'class-validator';
 
 export class CreateSizeDto {
   @ApiProperty({
@@ -7,5 +7,6 @@ export class CreateSizeDto {
     example: 42,
   })
   @IsNumber({ allowNaN: false, allowInfinity: false })
+  @IsPositive()
   value: number;
 }
