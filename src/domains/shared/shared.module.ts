@@ -1,17 +1,22 @@
 import { Global, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { LeadsModule } from '../leads/leads.module';
-import { DocumentsService } from './documents/documents.service';
+import { ColoursController } from './colours/colours.controller';
+import { ColoursService } from './colours/colours.service';
+import { Colour } from './colours/entities/colour.entity';
 import { Document } from './documents/entities/document.entity';
-import { Tag } from './tags/entities/tag.entity';
-import { TagsService } from './tags/tags.service';
+import { Size } from './sizes/entities/size.entity';
+import { SizesController } from './sizes/sizes.controller';
+import { SizesService } from './sizes/sizes.service';
+import { Unit } from './units/entities/unit.entity';
+import { UnitsController } from './units/units.controller';
+import { UnitsService } from './units/units.service';
 
 @Global()
 @Module({
-  imports: [TypeOrmModule.forFeature([Tag, Document]), LeadsModule],
-  controllers: [],
-  providers: [TagsService, DocumentsService],
-  exports: [TagsService, DocumentsService],
+  imports: [TypeOrmModule.forFeature([Document, Unit, Colour, Size])],
+  controllers: [UnitsController, ColoursController, SizesController],
+  providers: [UnitsService, ColoursService, SizesService],
+  exports: [UnitsService, ColoursService, SizesService, TypeOrmModule],
 })
 export class SharedModule {}

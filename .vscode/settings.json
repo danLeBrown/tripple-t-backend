@@ -6,7 +6,7 @@
     "source.organizeImports": "never",
     "source.removeUnusedImports": "explicit"
   },
-  "cSpell.words": ["dtos"],
+  "cSpell.words": ["colour", "colours", "dtos"],
   "eslint.useFlatConfig": true,
   "postman.settings.dotenv-detection-notification-visibility": false
 }
