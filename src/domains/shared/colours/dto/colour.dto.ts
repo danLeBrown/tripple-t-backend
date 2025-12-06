@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { BaseDto } from '@/common/dto/base.dto';
-
+import { BaseDto } from '../../../../common/dto/base.dto';
 import { Colour } from '../entities/colour.entity';
 
 export class ColourDto extends BaseDto {
