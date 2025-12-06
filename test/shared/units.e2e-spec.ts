@@ -122,9 +122,9 @@ describe('UnitsController (e2e)', () => {
         });
     });
 
-    it('/units?limit=1&page=1 (GET)', (done) => {
+    it('/units/search?limit=1&page=1 (GET)', (done) => {
       request
-        .get('/v1/units?limit=1&page=1')
+        .get('/v1/units/search?limit=1&page=1')
         .expect(200)
         .end((err, res) => {
           if (err) {
@@ -197,8 +197,8 @@ describe('UnitsController (e2e)', () => {
 
       beforeAll(async () => {
         const l = await unitsService.create({
-          name: 'Liter',
-          symbol: 'l',
+          name: 'Milliliter',
+          symbol: 'ml',
         });
 
         new_unit_id = l.id;

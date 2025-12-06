@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getUnixTime } from 'date-fns/getUnixTime';
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { FindOptionsWhere, Not, Repository } from 'typeorm';
 
 import { slugify } from '@/helpers/string.helper';
 
@@ -21,8 +21,12 @@ export class ColoursService {
     private readonly repo: Repository<Colour>,
   ) {}
 
+  private generateSlug(name: string) {
+    return slugify(name);
+  }
+
   async create(dto: CreateColourDto) {
-    const slug = slugify(dto.name);
+    const slug = this.generateSlug(dto.name);
 
     const exists = await this.repo.findOne({
       where: { slug },
@@ -97,6 +101,16 @@ export class ColoursService {
 
   async update(id: string, dto: UpdateColourDto) {
     const colour = await this.findOneByOrFail({ id });
+
+    const slug = this.generateSlug(dto.name ?? colour.name);
+
+    const exists = await this.repo.findOne({
+      where: { slug, id: Not(id) },
+    });
+
+    if (exists) {
+      throw new BadRequestException('Colour with this name already exists');
+    }
 
     return this.repo.update(colour.id, dto);
   }

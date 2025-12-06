@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getUnixTime } from 'date-fns/getUnixTime';
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { FindOptionsWhere, Not, Repository } from 'typeorm';
 
 import { slugify } from '@/helpers/string.helper';
 
@@ -21,8 +21,17 @@ export class ProductsService {
     private readonly repo: Repository<Product>,
   ) {}
 
+  private generateSlug(data: {
+    type: string;
+    size: number;
+    colour: string;
+    unit: string;
+  }) {
+    return slugify(`${data.type}_${data.size}_${data.colour}_${data.unit}`);
+  }
+
   async create(dto: CreateProductDto) {
-    const slug = slugify(`${dto.type}_${dto.size}_${dto.colour}_${dto.unit}`);
+    const slug = this.generateSlug(dto);
 
     const exists = await this.repo.findOne({
       where: { slug },
@@ -54,7 +63,7 @@ export class ProductsService {
 
     if (search_query) {
       qb.where('LOWER(product.type) LIKE :search_query')
-        .orWhere('LOWER(product.size) LIKE :search_query')
+        .orWhere('CAST(product.size AS TEXT) LIKE :search_query')
         .orWhere('LOWER(product.colour) LIKE :search_query')
         .orWhere('LOWER(product.unit) LIKE :search_query')
         .setParameter('search_query', `%${search_query.toLowerCase()}%`);
@@ -100,6 +109,23 @@ export class ProductsService {
 
   async update(id: string, dto: UpdateProductDto) {
     const product = await this.findOneByOrFail({ id });
+
+    const slug = this.generateSlug({
+      type: dto.type ?? product.type,
+      size: dto.size ?? product.size,
+      colour: dto.colour ?? product.colour,
+      unit: dto.unit ?? product.unit,
+    });
+
+    const exists = await this.repo.exists({
+      where: { slug, id: Not(product.id) },
+    });
+
+    if (exists) {
+      throw new BadRequestException(
+        'Product with this type, size, colour, and unit combination already exists',
+      );
+    }
 
     return this.repo.update(product.id, dto);
   }

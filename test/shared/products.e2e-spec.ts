@@ -131,9 +131,9 @@ describe('ProductsController (e2e)', () => {
         });
     });
 
-    it('/products?limit=1&page=1 (GET)', (done) => {
+    it('/products/search?limit=1&page=1 (GET)', (done) => {
       request
-        .get('/v1/products?limit=1&page=1')
+        .get('/v1/products/search?limit=1&page=1')
         .expect(200)
         .end((err, res) => {
           if (err) {
@@ -177,9 +177,9 @@ describe('ProductsController (e2e)', () => {
     beforeAll(async () => {
       const l = await productsService.create({
         type: 'Cap',
-        size: 0,
+        size: 75,
         colour: 'Black',
-        unit: 'pieces',
+        unit: 'Cl',
       });
 
       product = l.toDto();

@@ -6,7 +6,7 @@ import { BaseEntity } from '../../../../common/base.entity';
 import { ProductDto } from '../dto/product.dto';
 import { ProductType } from '../types';
 
-@Entity({ name: 'product' })
+@Entity({ name: 'products' })
 @SetDto(ProductDto)
 export class Product extends BaseEntity<ProductDto> {
   @Column({ type: 'varchar', length: 255 })

@@ -119,9 +119,9 @@ describe('ColoursController (e2e)', () => {
         });
     });
 
-    it('/colours?limit=1&page=1 (GET)', (done) => {
+    it('/colours/search?limit=1&page=1 (GET)', (done) => {
       request
-        .get('/v1/colours?limit=1&page=1')
+        .get('/v1/colours/search?limit=1&page=1')
         .expect(200)
         .end((err, res) => {
           if (err) {
