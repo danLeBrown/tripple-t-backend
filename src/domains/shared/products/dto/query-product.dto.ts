@@ -8,7 +8,7 @@ import { CreateProductDto } from './create-product.dto';
 
 export class QueryProductDto extends IntersectionType(
   OmitType(PartialType(CreateProductDto), [
-    'name',
+    'type',
     'size',
     'colour',
     'unit',

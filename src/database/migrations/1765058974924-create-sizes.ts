@@ -19,7 +19,7 @@ export class CreateSizes1765058974924 implements MigrationInterface {
     }),
     new TableColumn({
       name: 'value',
-      type: 'integer',
+      type: 'int',
       isUnique: true,
     }),
     new TableColumn({

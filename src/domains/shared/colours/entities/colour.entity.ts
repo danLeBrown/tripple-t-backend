@@ -1,9 +1,9 @@
 import { Column, Entity } from 'typeorm';
 
-import { BaseEntity } from '../../../../common/base.entity';
-
-import { ColourDto } from '../dto/colour.dto';
 import { SetDto } from '@/decorators/set-dto.decorator';
+
+import { BaseEntity } from '../../../../common/base.entity';
+import { ColourDto } from '../dto/colour.dto';
 
 @Entity({ name: 'colours' })
 @SetDto(ColourDto)

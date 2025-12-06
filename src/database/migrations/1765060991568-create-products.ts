@@ -24,7 +24,7 @@ export class CreateProducts1765060991568 implements MigrationInterface {
     }),
     new TableColumn({
       name: 'size',
-      type: 'integer',
+      type: 'int',
     }),
     new TableColumn({
       name: 'colour',

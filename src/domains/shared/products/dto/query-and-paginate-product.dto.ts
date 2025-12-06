@@ -2,7 +2,7 @@ import { IntersectionType } from '@nestjs/swagger';
 
 import { OrderByDto, PaginationDto } from '@/common/dto/pagination.dto';
 
-import { QueryProductDto, SearchProductDto } from './query-Product.dto';
+import { QueryProductDto, SearchProductDto } from './query-product.dto';
 
 export class QueryAndPaginateProductDto extends IntersectionType(
   QueryProductDto,

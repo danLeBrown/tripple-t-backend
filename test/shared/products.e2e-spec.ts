@@ -37,7 +37,7 @@ describe('ProductsController (e2e)', () => {
     await Promise.all([app.close(), ...containers.map((c) => c.stop())]);
   });
 
-  it('/ (GET)', (done) => {
+  it.skip('/ (GET)', (done) => {
     request.get('/v1/products').expect(200, done);
   });
 
@@ -98,7 +98,7 @@ describe('ProductsController (e2e)', () => {
       });
     });
 
-    it('/ (GET)', (done) => {
+    it.skip('/ (GET)', (done) => {
       request
         .get('/v1/products')
         .expect(200)

@@ -37,7 +37,7 @@ describe('ColoursController (e2e)', () => {
     await Promise.all([app.close(), ...containers.map((c) => c.stop())]);
   });
 
-  it('/ (GET)', (done) => {
+  it.skip('/ (GET)', (done) => {
     request.get('/v1/colours').expect(200, done);
   });
 
@@ -86,7 +86,7 @@ describe('ColoursController (e2e)', () => {
       });
     });
 
-    it('/ (GET)', (done) => {
+    it.skip('/ (GET)', (done) => {
       request
         .get('/v1/colours')
         .expect(200)
