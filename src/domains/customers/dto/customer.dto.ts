@@ -1,34 +1,39 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { BaseDto } from '@/common/dto/base.dto';
-
+import { BaseDto } from '../../../common/dto/base.dto';
 import { Customer } from '../entities/customer.entity';
 import { CustomerStatus, customerStatus } from '../types';
 
 export class CustomerDto extends BaseDto {
   @ApiProperty({
+    example: 'Acme Inc.',
+    description: 'The business name of the customer',
+  })
+  business_name: string;
+
+  @ApiProperty({
     example: 'John',
     description: 'The first name of the customer',
   })
-  first_name: string;
+  contact_person_first_name: string;
 
   @ApiProperty({
     example: 'Doe',
     description: 'The last name of the customer',
   })
-  last_name: string;
+  contact_person_last_name: string;
 
   @ApiProperty({
     example: 'johndoe@example.com',
     description: 'The email address of the customer',
   })
-  email: string;
+  contact_person_email: string | null;
 
   @ApiProperty({
     example: '+1234567890',
     description: 'The phone number of the customer',
   })
-  phone_number: string;
+  contact_person_phone_number: string;
 
   @ApiProperty({
     examples: Object.values(customerStatus),
@@ -51,10 +56,11 @@ export class CustomerDto extends BaseDto {
   constructor(customer: Customer) {
     super(customer);
 
-    this.first_name = customer.first_name;
-    this.last_name = customer.last_name;
-    this.email = customer.email;
-    this.phone_number = customer.phone_number;
+    this.business_name = customer.business_name;
+    this.contact_person_first_name = customer.contact_person_first_name;
+    this.contact_person_last_name = customer.contact_person_last_name;
+    this.contact_person_email = customer.contact_person_email;
+    this.contact_person_phone_number = customer.contact_person_phone_number;
     this.status = customer.status;
     this.address = customer.address;
     this.state = customer.state;

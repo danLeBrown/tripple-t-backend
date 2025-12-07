@@ -21,10 +21,7 @@ import { AuditLog } from '../../decorators/audit-log.decorator';
 import { CustomersService } from './customers.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { CustomerDto } from './dto/customer.dto';
-import {
-  QueryAndPaginateCustomerDto,
-  SearchAndPaginateCustomerDto,
-} from './dto/query-and-paginate-customer.dto';
+import { SearchAndPaginateCustomerDto } from './dto/query-and-paginate-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 
 @ApiBearerAuth()
@@ -56,39 +53,6 @@ export class CustomersController {
     return {
       data: data.toDto(),
     };
-  }
-
-  @ApiOkResponse({
-    description: 'Customers retrieved successfully',
-    schema: {
-      allOf: [
-        { $ref: getSchemaPath(PaginatedDto) },
-        {
-          properties: {
-            data: {
-              type: 'array',
-              items: { $ref: getSchemaPath(CustomerDto) },
-            },
-          },
-        },
-      ],
-    },
-  })
-  @AuditLog({
-    action: 'Get customers',
-  })
-  @Get('')
-  async findBy(
-    @Query()
-    query: QueryAndPaginateCustomerDto,
-  ) {
-    const [data, total] = await this.customersService.findBy(query);
-
-    return new PaginatedDto(CustomerDto.collection(data), {
-      total,
-      page: query.page ?? 0,
-      limit: query.limit ?? 0,
-    });
   }
 
   @ApiOkResponse({

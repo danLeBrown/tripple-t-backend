@@ -1,34 +1,39 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { BaseDto } from '@/common/dto/base.dto';
-
+import { BaseDto } from '../../../common/dto/base.dto';
 import { Supplier } from '../entities/supplier.entity';
 import { SupplierStatus, supplierStatus } from '../types';
 
 export class SupplierDto extends BaseDto {
   @ApiProperty({
-    example: 'John',
-    description: 'The first name of the supplier',
+    example: 'Acme Inc.',
+    description: 'The business name of the supplier',
   })
-  first_name: string;
+  business_name: string;
+
+  @ApiProperty({
+    example: 'John',
+    description: 'The first name of the contact person for the supplier',
+  })
+  contact_person_first_name: string;
 
   @ApiProperty({
     example: 'Doe',
-    description: 'The last name of the supplier',
+    description: 'The last name of the contact person for the supplier',
   })
-  last_name: string;
+  contact_person_last_name: string;
 
   @ApiProperty({
     example: 'johndoe@example.com',
-    description: 'The email address of the supplier',
+    description: 'The email address of the contact person for the supplier',
   })
-  email: string;
+  contact_person_email: string | null;
 
   @ApiProperty({
     example: '+1234567890',
-    description: 'The phone number of the supplier',
+    description: 'The phone number of the contact person for the supplier',
   })
-  phone_number: string;
+  contact_person_phone_number: string;
 
   @ApiProperty({
     examples: Object.values(supplierStatus),
@@ -51,10 +56,11 @@ export class SupplierDto extends BaseDto {
   constructor(supplier: Supplier) {
     super(supplier);
 
-    this.first_name = supplier.first_name;
-    this.last_name = supplier.last_name;
-    this.email = supplier.email;
-    this.phone_number = supplier.phone_number;
+    this.business_name = supplier.business_name;
+    this.contact_person_first_name = supplier.contact_person_first_name;
+    this.contact_person_last_name = supplier.contact_person_last_name;
+    this.contact_person_email = supplier.contact_person_email;
+    this.contact_person_phone_number = supplier.contact_person_phone_number;
     this.status = supplier.status;
     this.address = supplier.address;
     this.state = supplier.state;

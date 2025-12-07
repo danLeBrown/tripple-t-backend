@@ -8,10 +8,7 @@ import { getUnixTime } from 'date-fns';
 import { FindOptionsWhere, Repository } from 'typeorm';
 
 import { CreateCustomerDto } from './dto/create-customer.dto';
-import {
-  QueryAndPaginateCustomerDto,
-  SearchAndPaginateCustomerDto,
-} from './dto/query-and-paginate-customer.dto';
+import { SearchAndPaginateCustomerDto } from './dto/query-and-paginate-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { Customer } from './entities/customer.entity';
 
@@ -21,43 +18,24 @@ export class CustomersService {
   private readonly repo: Repository<Customer>;
 
   async create(dto: CreateCustomerDto) {
-    const customer = this.repo.create(dto);
+    const customer = this.repo.create({ ...dto, status: 'active' });
 
     const exists = await this.repo.findOne({
       where: [
         {
-          email: customer.email,
-          phone_number: customer.phone_number,
+          contact_person_email: customer.contact_person_email ?? undefined,
+          contact_person_phone_number: customer.contact_person_phone_number,
         },
       ],
     });
 
     if (exists) {
       throw new BadRequestException(
-        'Customer with this email or phone number already exists',
+        'Customer with this contact person email or phone number already exists',
       );
     }
 
     return this.repo.save(customer);
-  }
-
-  async findBy(query: QueryAndPaginateCustomerDto) {
-    const {
-      limit = 0,
-      page = 0,
-      order_by = 'name',
-      order_direction = 'asc',
-      ...rest
-    } = query;
-
-    return this.repo.findAndCount({
-      where: rest,
-      order: {
-        [order_by === 'name' ? 'first_name' : 'created_at']: order_direction,
-      },
-      take: limit > 0 ? limit : undefined,
-      skip: page && limit ? (page - 1) * limit : undefined,
-    });
   }
 
   async search(query: SearchAndPaginateCustomerDto) {
@@ -67,19 +45,21 @@ export class CustomersService {
       to_time,
       limit = 0,
       page = 0,
-      order_by = 'name',
+      order_by = 'business_name',
       order_direction = 'asc',
     } = query;
 
     const qb = this.repo.createQueryBuilder('customer');
 
     if (search_query) {
-      qb.where(
-        'LOWER(customer.first_name) LIKE :search_query OR LOWER(customer.last_name) LIKE :search_query',
-      )
-        .orWhere('LOWER(customer.email) LIKE :search_query')
-        .orWhere('customer.phone_number LIKE :search_query')
+      qb.where('LOWER(customer.business_name) LIKE :search_query')
+        .orWhere('LOWER(customer.contact_person_first_name) LIKE :search_query')
+        .orWhere('LOWER(customer.contact_person_last_name) LIKE :search_query')
+        .orWhere('LOWER(customer.contact_person_email) LIKE :search_query')
+        .orWhere('customer.contact_person_phone_number LIKE :search_query')
         .orWhere('customer.status LIKE :search_query')
+        .orWhere('customer.address LIKE :search_query')
+        .orWhere('customer.state LIKE :search_query')
         .setParameter('search_query', `%${search_query.toLowerCase()}%`);
     }
 
@@ -97,7 +77,9 @@ export class CustomersService {
 
     return qb
       .orderBy(
-        order_by === 'name' ? 'customer.first_name' : 'customer.created_at',
+        order_by === 'business_name'
+          ? 'customer.business_name'
+          : 'customer.created_at',
         order_direction.toUpperCase() as 'ASC' | 'DESC',
       )
       .take(limit > 0 ? limit : undefined)
@@ -124,6 +106,28 @@ export class CustomersService {
   async update(id: string, dto: UpdateCustomerDto) {
     const customer = await this.findOneByOrFail({ id });
 
-    this.repo.update(customer.id, dto);
+    const qb = this.repo.createQueryBuilder('customer').where('1=1');
+
+    if (dto.contact_person_email || dto.contact_person_phone_number) {
+      qb.andWhere(
+        // eslint-disable-next-line max-len
+        `(${dto.contact_person_email ? 'customer.contact_person_email = :contact_person_email' : '1=1'} OR ${dto.contact_person_phone_number ? 'customer.contact_person_phone_number = :contact_person_phone_number' : '1=1'})`,
+        {
+          contact_person_email: dto.contact_person_email ?? undefined,
+          contact_person_phone_number:
+            dto.contact_person_phone_number ?? undefined,
+        },
+      ).andWhere('customer.id != :id', { id });
+    }
+
+    const exists = await qb.getExists();
+
+    if (exists) {
+      throw new BadRequestException(
+        'Customer with this contact person email or phone number already exists',
+      );
+    }
+
+    return this.repo.update(customer.id, dto);
   }
 }

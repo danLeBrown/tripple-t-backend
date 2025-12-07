@@ -19,10 +19,7 @@ import { PaginatedDto } from '@/common/dto/paginated.dto';
 
 import { AuditLog } from '../../decorators/audit-log.decorator';
 import { CreateSupplierDto } from './dto/create-supplier.dto';
-import {
-  QueryAndPaginateSupplierDto,
-  SearchAndPaginateSupplierDto,
-} from './dto/query-and-paginate-supplier.dto';
+import { SearchAndPaginateSupplierDto } from './dto/query-and-paginate-supplier.dto';
 import { SupplierDto } from './dto/supplier.dto';
 import { UpdateSupplierDto } from './dto/update-supplier.dto';
 import { SuppliersService } from './suppliers.service';
@@ -56,39 +53,6 @@ export class SuppliersController {
     return {
       data: data.toDto(),
     };
-  }
-
-  @ApiOkResponse({
-    description: 'Suppliers retrieved successfully',
-    schema: {
-      allOf: [
-        { $ref: getSchemaPath(PaginatedDto) },
-        {
-          properties: {
-            data: {
-              type: 'array',
-              items: { $ref: getSchemaPath(SupplierDto) },
-            },
-          },
-        },
-      ],
-    },
-  })
-  @AuditLog({
-    action: 'Get suppliers',
-  })
-  @Get('')
-  async findBy(
-    @Query()
-    query: QueryAndPaginateSupplierDto,
-  ) {
-    const [data, total] = await this.suppliersService.findBy(query);
-
-    return new PaginatedDto(SupplierDto.collection(data), {
-      total,
-      page: query.page ?? 0,
-      limit: query.limit ?? 0,
-    });
   }
 
   @ApiOkResponse({

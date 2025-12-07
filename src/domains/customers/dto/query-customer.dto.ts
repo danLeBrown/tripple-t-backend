@@ -8,8 +8,13 @@ import { CreateCustomerDto } from './create-customer.dto';
 
 export class QueryCustomerDto extends IntersectionType(
   OmitType(PartialType(CreateCustomerDto), [
-    'first_name',
-    'last_name',
+    'business_name',
+    'contact_person_first_name',
+    'contact_person_last_name',
+    'contact_person_email',
+    'contact_person_phone_number',
+    'address',
+    'state',
   ] as const),
   QueryDto,
 ) {}

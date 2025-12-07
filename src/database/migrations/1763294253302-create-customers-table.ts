@@ -18,26 +18,30 @@ export class CreateCustomersTable1763294253302 implements MigrationInterface {
       default: 'uuid_generate_v4()',
     }),
     new TableColumn({
-      name: 'first_name',
+      name: 'business_name',
       type: 'varchar',
       length: '100',
     }),
     new TableColumn({
-      name: 'last_name',
+      name: 'contact_person_first_name',
       type: 'varchar',
       length: '100',
     }),
     new TableColumn({
-      name: 'email',
+      name: 'contact_person_last_name',
+      type: 'varchar',
+      length: '100',
+    }),
+    new TableColumn({
+      name: 'contact_person_email',
       type: 'varchar',
       length: '255',
-      isUnique: true,
+      isNullable: true,
     }),
     new TableColumn({
-      name: 'phone_number',
+      name: 'contact_person_phone_number',
       type: 'varchar',
       length: '100',
-      isNullable: true,
     }),
     new TableColumn({
       name: 'status',
@@ -68,22 +72,35 @@ export class CreateCustomersTable1763294253302 implements MigrationInterface {
 
   private indices = [
     new TableIndex({
-      name: 'idx_customers_first_name',
-      columnNames: ['first_name'],
+      name: 'idx_customers_business_name',
+      columnNames: ['business_name'],
     }),
     new TableIndex({
-      name: 'idx_customers_last_name',
-      columnNames: ['last_name'],
+      name: 'idx_customers_contact_person_last_name',
+      columnNames: ['contact_person_last_name'],
     }),
     new TableIndex({
-      name: 'idx_customers_email',
-      columnNames: ['email'],
+      name: 'idx_customers_contact_person_email',
+      columnNames: ['contact_person_email'],
+      isUnique: true,
+      where: 'contact_person_email IS NOT NULL',
+    }),
+    new TableIndex({
+      name: 'idx_customers_contact_person_phone_number',
+      columnNames: ['contact_person_phone_number'],
       isUnique: true,
     }),
     new TableIndex({
-      name: 'idx_customers_phone_number',
-      columnNames: ['phone_number'],
-      isUnique: true,
+      name: 'idx_customers_status',
+      columnNames: ['status'],
+    }),
+    new TableIndex({
+      name: 'idx_customers_address',
+      columnNames: ['address'],
+    }),
+    new TableIndex({
+      name: 'idx_customers_state',
+      columnNames: ['state'],
     }),
     new TableIndex({
       name: 'idx_customers_created_at',

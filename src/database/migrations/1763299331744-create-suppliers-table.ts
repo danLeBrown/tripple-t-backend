@@ -13,23 +13,28 @@ export class CreateSuppliersTable1763294253302 implements MigrationInterface {
       default: 'uuid_generate_v4()',
     }),
     new TableColumn({
-      name: 'first_name',
+      name: 'business_name',
       type: 'varchar',
       length: '100',
     }),
     new TableColumn({
-      name: 'last_name',
+      name: 'contact_person_first_name',
       type: 'varchar',
       length: '100',
     }),
     new TableColumn({
-      name: 'email',
+      name: 'contact_person_last_name',
+      type: 'varchar',
+      length: '100',
+    }),
+    new TableColumn({
+      name: 'contact_person_email',
       type: 'varchar',
       length: '255',
       isNullable: true,
     }),
     new TableColumn({
-      name: 'phone_number',
+      name: 'contact_person_phone_number',
       type: 'varchar',
       length: '100',
     }),
@@ -62,21 +67,39 @@ export class CreateSuppliersTable1763294253302 implements MigrationInterface {
 
   private indices = [
     new TableIndex({
-      name: 'idx_suppliers_first_name',
-      columnNames: ['first_name'],
+      name: 'idx_suppliers_business_name',
+      columnNames: ['business_name'],
     }),
     new TableIndex({
-      name: 'idx_suppliers_last_name',
-      columnNames: ['last_name'],
+      name: 'idx_suppliers_contact_person_first_name',
+      columnNames: ['contact_person_first_name'],
     }),
     new TableIndex({
-      name: 'idx_suppliers_email',
-      columnNames: ['email'],
+      name: 'idx_suppliers_contact_person_last_name',
+      columnNames: ['contact_person_last_name'],
     }),
     new TableIndex({
-      name: 'idx_suppliers_phone_number',
-      columnNames: ['phone_number'],
+      name: 'idx_suppliers_contact_person_email',
+      columnNames: ['contact_person_email'],
       isUnique: true,
+      where: 'contact_person_email IS NOT NULL',
+    }),
+    new TableIndex({
+      name: 'idx_suppliers_contact_person_phone_number',
+      columnNames: ['contact_person_phone_number'],
+      isUnique: true,
+    }),
+    new TableIndex({
+      name: 'idx_suppliers_status',
+      columnNames: ['status'],
+    }),
+    new TableIndex({
+      name: 'idx_suppliers_address',
+      columnNames: ['address'],
+    }),
+    new TableIndex({
+      name: 'idx_suppliers_state',
+      columnNames: ['state'],
     }),
     new TableIndex({
       name: 'idx_suppliers_created_at',
