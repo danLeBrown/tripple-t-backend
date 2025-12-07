@@ -94,7 +94,7 @@ jobs:
             npm run migration:prod:run
 
             # Restart the application
-            pm2 restart tripplet
+            pm2 restart tripple-t
 
             # Clean up
             rm -rf /tmp/app-deployment
