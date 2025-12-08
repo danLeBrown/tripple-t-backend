@@ -47,25 +47,25 @@ export class ExpensesService {
     const qb = this.repo.createQueryBuilder('expense');
 
     if (search_query) {
-      qb.where(
-        'LOWER(expense.narration) LIKE :search_query OR CAST(expense.amount AS TEXT) LIKE :search_query',
-      ).setParameter('search_query', `%${search_query.toLowerCase()}%`);
+      qb.where('LOWER(expense.narration) LIKE :search_query')
+        .orWhere('CAST(expense.amount AS TEXT) LIKE :search_query')
+        .orWhere('LOWER(expense.category) LIKE :search_query')
+        .setParameter('search_query', `%${search_query.toLowerCase()}%`);
     }
-
     if (from_time) {
-      qb.andWhere('expense.created_at >= :from_time', {
+      qb.andWhere('expense.reported_at >= :from_time', {
         from_time: getUnixTime(new Date(from_time * 1000)),
       });
     }
 
     if (to_time) {
-      qb.andWhere('expense.created_at <= :to_time', {
+      qb.andWhere('expense.reported_at <= :to_time', {
         to_time: getUnixTime(new Date(to_time * 1000)),
       });
     }
 
     return qb
-      .orderBy('expense.created_at', 'DESC')
+      .orderBy('expense.reported_at', 'DESC')
       .take(limit > 0 ? limit : undefined)
       .skip(page && limit ? (page - 1) * limit : undefined)
       .getManyAndCount();

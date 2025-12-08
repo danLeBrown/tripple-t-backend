@@ -20,10 +20,7 @@ import { PaginatedDto } from '@/common/dto/paginated.dto';
 import { AuditLog } from '../../decorators/audit-log.decorator';
 import { CreateExpenseDto } from './dto/create-expense.dto';
 import { ExpenseDto } from './dto/expense.dto';
-import {
-  QueryAndPaginateExpenseDto,
-  SearchAndPaginateExpenseDto,
-} from './dto/query-and-paginate-expense.dto';
+import { SearchAndPaginateExpenseDto } from './dto/query-and-paginate-expense.dto';
 import { UpdateExpenseDto } from './dto/update-expense.dto';
 import { ExpensesService } from './expenses.service';
 
@@ -56,39 +53,6 @@ export class ExpensesController {
     return {
       data: data.toDto(),
     };
-  }
-
-  @ApiOkResponse({
-    description: 'Expenses retrieved successfully',
-    schema: {
-      allOf: [
-        { $ref: getSchemaPath(PaginatedDto) },
-        {
-          properties: {
-            data: {
-              type: 'array',
-              items: { $ref: getSchemaPath(ExpenseDto) },
-            },
-          },
-        },
-      ],
-    },
-  })
-  @AuditLog({
-    action: 'Get expenses',
-  })
-  @Get('')
-  async findBy(
-    @Query()
-    query: QueryAndPaginateExpenseDto,
-  ) {
-    const [data, total] = await this.expensesService.findBy(query);
-
-    return new PaginatedDto(ExpenseDto.collection(data), {
-      total,
-      page: query.page ?? 0,
-      limit: query.limit ?? 0,
-    });
   }
 
   @ApiOkResponse({

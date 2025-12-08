@@ -13,6 +13,11 @@ export class CreateExpensesTable1763902096923 implements MigrationInterface {
       default: 'uuid_generate_v4()',
     }),
     new TableColumn({
+      name: 'category',
+      type: 'varchar',
+      length: '255',
+    }),
+    new TableColumn({
       name: 'amount',
       type: 'int',
     }),
@@ -20,6 +25,15 @@ export class CreateExpensesTable1763902096923 implements MigrationInterface {
       name: 'narration',
       type: 'varchar',
       length: '255',
+    }),
+    new TableColumn({
+      name: 'has_been_calculated',
+      type: 'boolean',
+      default: false,
+    }),
+    new TableColumn({
+      name: 'reported_at',
+      type: 'bigint',
     }),
     new TableColumn({
       name: 'created_at',
@@ -36,12 +50,24 @@ export class CreateExpensesTable1763902096923 implements MigrationInterface {
 
   private indices = [
     new TableIndex({
+      name: 'idx_expenses_category',
+      columnNames: ['category'],
+    }),
+    new TableIndex({
       name: 'idx_expenses_amount',
       columnNames: ['amount'],
     }),
     new TableIndex({
       name: 'idx_expenses_narration',
       columnNames: ['narration'],
+    }),
+    new TableIndex({
+      name: 'idx_expenses_has_been_calculated',
+      columnNames: ['has_been_calculated'],
+    }),
+    new TableIndex({
+      name: 'idx_expenses_reported_at',
+      columnNames: ['reported_at'],
     }),
     new TableIndex({
       name: 'idx_expenses_created_at',
