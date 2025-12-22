@@ -10,6 +10,9 @@ import { ProductType } from '../types';
 @SetDto(ProductDto)
 export class Product extends BaseEntity<ProductDto> {
   @Column({ type: 'varchar', length: 255 })
+  name: string;
+
+  @Column({ type: 'varchar', length: 255 })
   type: ProductType;
 
   @Column({ type: 'int' })
@@ -28,6 +31,4 @@ export class Product extends BaseEntity<ProductDto> {
   private setName() {
     this.name = `${this.size} ${this.unit.toLowerCase()} ${this.type} ${this.colour}`;
   }
-
-  name: string;
 }

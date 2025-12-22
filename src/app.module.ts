@@ -18,6 +18,7 @@ import { AuthModule } from './domains/auth/auth.module';
 import { CustomersModule } from './domains/customers/customers.module';
 import { ExpensesModule } from './domains/expenses/expenses.module';
 import { NotificationsModule } from './domains/notifications/notifications.module';
+import { PurchaseRecordsModule } from './domains/purchase-records/purchase-records.module';
 import { SharedModule } from './domains/shared/shared.module';
 import { SuppliersModule } from './domains/suppliers/suppliers.module';
 import { UploadsModule } from './domains/uploads/uploads.module';
@@ -79,8 +80,9 @@ import { ValidatorsModule } from './validators/validators.module';
     NotificationsModule,
     HttpModule.register({ global: true }),
     CustomersModule,
-    SuppliersModule,
     ExpensesModule,
+    SuppliersModule,
+    PurchaseRecordsModule,
   ],
   controllers: [AppController],
   providers: [

@@ -1,16 +1,16 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 
-import { BaseEntity } from '@/common/base.entity';
 import { SetDto } from '@/decorators/set-dto.decorator';
 import { Product } from '@/domains/shared/products/entities/product.entity';
 import { Supplier } from '@/domains/suppliers/entities/supplier.entity';
 import { Upload } from '@/domains/uploads/entities/upload.entity';
 
-import { PurchaseDto } from '../dto/purchase.dto';
+import { BaseEntity } from '../../../common/base.entity';
+import { PurchaseRecordDto } from '../dto/purchase-record.dto';
 
-@Entity('purchases')
-@SetDto(PurchaseDto)
-export class Purchase extends BaseEntity<PurchaseDto> {
+@Entity('purchase_records')
+@SetDto(PurchaseRecordDto)
+export class PurchaseRecord extends BaseEntity<PurchaseRecordDto> {
   @Column({ type: 'uuid' })
   upload_id: string;
 
@@ -37,6 +37,9 @@ export class Purchase extends BaseEntity<PurchaseDto> {
 
   @Column({ type: 'bigint' })
   purchased_at: number;
+
+  @Column({ type: 'boolean', default: false })
+  has_been_calculated: boolean;
 
   @OneToOne(() => Upload, { eager: true })
   @JoinColumn({ name: 'upload_id', referencedColumnName: 'id' })

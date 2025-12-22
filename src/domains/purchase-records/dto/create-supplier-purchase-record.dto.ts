@@ -4,9 +4,9 @@ import { IsArray, IsNotEmpty, ValidateNested } from 'class-validator';
 
 import { CreateUploadDto } from '@/domains/uploads/dto/create-upload.dto';
 
-import { CreatePurchaseWithoutPurchaseInvoiceAndSupplierDto } from './create-purchase.dto';
+import { CreatePurchaseRecordWithoutUploadAndSupplierDto } from './create-purchase-record.dto';
 
-export class CreatePurchaseWithInvoiceDto {
+export class CreateSupplierPurchaseRecordDto {
   @ApiProperty({
     description: 'Upload details',
     type: CreateUploadDto,
@@ -17,12 +17,12 @@ export class CreatePurchaseWithInvoiceDto {
   upload: CreateUploadDto;
 
   @ApiProperty({
-    description: 'Purchases details',
-    type: [CreatePurchaseWithoutPurchaseInvoiceAndSupplierDto],
+    description: 'Purchase records details for the supplier',
+    type: [CreatePurchaseRecordWithoutUploadAndSupplierDto],
   })
   @IsArray()
   @IsNotEmpty()
   @ValidateNested({ each: true })
-  @Type(() => CreatePurchaseWithoutPurchaseInvoiceAndSupplierDto)
-  purchases: CreatePurchaseWithoutPurchaseInvoiceAndSupplierDto[];
+  @Type(() => CreatePurchaseRecordWithoutUploadAndSupplierDto)
+  purchase_records: CreatePurchaseRecordWithoutUploadAndSupplierDto[];
 }

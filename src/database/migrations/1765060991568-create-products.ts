@@ -18,6 +18,11 @@ export class CreateProducts1765060991568 implements MigrationInterface {
       default: 'uuid_generate_v4()',
     }),
     new TableColumn({
+      name: 'name',
+      type: 'varchar',
+      length: '255',
+    }),
+    new TableColumn({
       name: 'type',
       type: 'varchar',
       length: '255',

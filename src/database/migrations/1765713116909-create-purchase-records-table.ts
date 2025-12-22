@@ -7,8 +7,10 @@ import {
   TableIndex,
 } from 'typeorm';
 
-export class CreatePurchasesTable1765713116909 implements MigrationInterface {
-  private tableName = 'purchases';
+export class CreatePurchaseRecordsTable1765713116909
+  implements MigrationInterface
+{
+  private tableName = 'purchase_records';
 
   private columns = [
     new TableColumn({
@@ -19,12 +21,14 @@ export class CreatePurchasesTable1765713116909 implements MigrationInterface {
       default: 'uuid_generate_v4()',
     }),
     new TableColumn({
-      name: 'purchase_invoice_id',
+      name: 'upload_id',
       type: 'uuid',
+      isNullable: true,
     }),
     new TableColumn({
       name: 'product_id',
       type: 'uuid',
+      isNullable: true,
     }),
     new TableColumn({
       name: 'product_name',
@@ -34,6 +38,7 @@ export class CreatePurchasesTable1765713116909 implements MigrationInterface {
     new TableColumn({
       name: 'supplier_id',
       type: 'uuid',
+      isNullable: true,
     }),
     new TableColumn({
       name: 'supplier_name',
@@ -57,6 +62,11 @@ export class CreatePurchasesTable1765713116909 implements MigrationInterface {
       type: 'bigint',
     }),
     new TableColumn({
+      name: 'has_been_calculated',
+      type: 'boolean',
+      default: false,
+    }),
+    new TableColumn({
       name: 'created_at',
       type: 'bigint',
       default: `FLOOR(EXTRACT(EPOCH FROM NOW()))`,
@@ -71,37 +81,64 @@ export class CreatePurchasesTable1765713116909 implements MigrationInterface {
 
   private foreignKeys = [
     new TableForeignKey({
-      name: 'fk_purchases_purchase_invoice_id',
-      columnNames: ['purchase_invoice_id'],
+      name: 'fk_purchase_records_upload_id',
+      columnNames: ['upload_id'],
       referencedColumnNames: ['id'],
-      referencedTableName: 'purchase_invoices',
+      referencedTableName: 'uploads',
+      onDelete: 'SET NULL',
     }),
     new TableForeignKey({
-      name: 'fk_purchases_product_id',
+      name: 'fk_purchase_records_product_id',
       columnNames: ['product_id'],
       referencedColumnNames: ['id'],
       referencedTableName: 'products',
+      onDelete: 'SET NULL',
     }),
     new TableForeignKey({
-      name: 'fk_purchases_supplier_id',
+      name: 'fk_purchase_records_supplier_id',
       columnNames: ['supplier_id'],
       referencedColumnNames: ['id'],
       referencedTableName: 'suppliers',
+      onDelete: 'SET NULL',
     }),
   ];
 
   private indices = [
     new TableIndex({
-      name: 'idx_purchases_purchase_invoice_id',
-      columnNames: ['purchase_invoice_id'],
-    }),
-    new TableIndex({
-      name: 'idx_purchases_product_id',
+      name: 'idx_purchase_records_product_id',
       columnNames: ['product_id'],
     }),
     new TableIndex({
-      name: 'idx_purchases_supplier_id',
+      name: 'idx_purchase_records_product_name',
+      columnNames: ['product_name'],
+    }),
+    new TableIndex({
+      name: 'idx_purchase_records_supplier_id',
       columnNames: ['supplier_id'],
+    }),
+    new TableIndex({
+      name: 'idx_purchase_records_supplier_name',
+      columnNames: ['supplier_name'],
+    }),
+    new TableIndex({
+      name: 'idx_purchase_records_has_been_calculated',
+      columnNames: ['has_been_calculated'],
+    }),
+    new TableIndex({
+      name: 'idx_purchase_records_purchased_at',
+      columnNames: ['purchased_at'],
+    }),
+    new TableIndex({
+      name: 'idx_purchase_records_total_price',
+      columnNames: ['total_price'],
+    }),
+    new TableIndex({
+      name: 'idx_purchase_records_created_at',
+      columnNames: ['created_at'],
+    }),
+    new TableIndex({
+      name: 'idx_purchase_records_updated_at',
+      columnNames: ['updated_at'],
     }),
   ];
 

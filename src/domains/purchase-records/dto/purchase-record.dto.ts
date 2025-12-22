@@ -1,13 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { BaseDto } from '@/common/dto/base.dto';
 import { ProductDto } from '@/domains/shared/products/dto/product.dto';
 import { SupplierDto } from '@/domains/suppliers/dto/supplier.dto';
 import { UploadDto } from '@/domains/uploads/dto/upload.dto';
 
-import { Purchase } from '../entities/purchase.entity';
+import { BaseDto } from '../../../common/dto/base.dto';
+import { PurchaseRecord } from '../entities/purchase-record.entity';
 
-export class PurchaseDto extends BaseDto {
+export class PurchaseRecordDto extends BaseDto {
   @ApiProperty({
     description: 'ID of the associated upload',
     example: 'a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6',
@@ -75,28 +75,28 @@ export class PurchaseDto extends BaseDto {
   })
   product: ProductDto;
 
-  constructor(purchase: Purchase) {
-    super(purchase);
-    this.upload_id = purchase.upload_id;
-    this.product_id = purchase.product_id;
-    this.product_name = purchase.product_name;
-    this.supplier_id = purchase.supplier_id;
-    this.supplier_name = purchase.supplier_name;
-    this.quantity_in_bags = purchase.quantity_in_bags;
-    this.price_per_bag = purchase.price_per_bag;
-    this.total_price = purchase.total_price;
-    this.purchased_at = purchase.purchased_at;
+  constructor(purchaseRecord: PurchaseRecord) {
+    super(purchaseRecord);
+    this.upload_id = purchaseRecord.upload_id;
+    this.product_id = purchaseRecord.product_id;
+    this.product_name = purchaseRecord.product_name;
+    this.supplier_id = purchaseRecord.supplier_id;
+    this.supplier_name = purchaseRecord.supplier_name;
+    this.quantity_in_bags = purchaseRecord.quantity_in_bags;
+    this.price_per_bag = purchaseRecord.price_per_bag;
+    this.total_price = purchaseRecord.total_price;
+    this.purchased_at = purchaseRecord.purchased_at;
 
-    if (purchase.upload) {
-      this.upload = new UploadDto(purchase.upload);
+    if (purchaseRecord.upload) {
+      this.upload = new UploadDto(purchaseRecord.upload);
     }
 
-    if (purchase.supplier) {
-      this.supplier = new SupplierDto(purchase.supplier);
+    if (purchaseRecord.supplier) {
+      this.supplier = new SupplierDto(purchaseRecord.supplier);
     }
 
-    if (purchase.product) {
-      this.product = new ProductDto(purchase.product);
+    if (purchaseRecord.product) {
+      this.product = new ProductDto(purchaseRecord.product);
     }
   }
 }

@@ -1,13 +1,13 @@
 import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { IsNumber, IsPositive, IsUUID } from 'class-validator';
 
-export class CreatePurchaseDto {
+export class CreatePurchaseRecordDto {
   @ApiProperty({
-    description: 'ID of the associated purchase invoice',
+    description: 'ID of the associated upload',
     example: 'a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6',
   })
   @IsUUID()
-  purchase_invoice_id: string;
+  upload_id: string;
 
   @ApiProperty({
     description: 'ID of the associated product',
@@ -48,7 +48,7 @@ export class CreatePurchaseDto {
   purchased_at: number;
 }
 
-export class CreatePurchaseWithoutPurchaseInvoiceAndSupplierDto extends OmitType(
-  CreatePurchaseDto,
-  ['purchase_invoice_id', 'supplier_id'] as const,
+export class CreatePurchaseRecordWithoutUploadAndSupplierDto extends OmitType(
+  CreatePurchaseRecordDto,
+  ['upload_id', 'supplier_id'] as const,
 ) {}
