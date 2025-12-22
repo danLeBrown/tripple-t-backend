@@ -1,4 +1,10 @@
-import { MigrationInterface, QueryRunner, Table, TableColumn } from 'typeorm';
+import {
+  MigrationInterface,
+  QueryRunner,
+  Table,
+  TableColumn,
+  TableIndex,
+} from 'typeorm';
 
 export class CreateUploadsTable1749732605602 implements MigrationInterface {
   private tableName = 'uploads';
@@ -22,6 +28,15 @@ export class CreateUploadsTable1749732605602 implements MigrationInterface {
       length: '255',
     }),
     new TableColumn({
+      name: 'file_mimetype',
+      type: 'varchar',
+      length: '255',
+    }),
+    new TableColumn({
+      name: 'file_size',
+      type: 'int',
+    }),
+    new TableColumn({
       name: 'created_at',
       type: 'bigint',
       default: `FLOOR(EXTRACT(EPOCH FROM NOW()))`,
@@ -34,11 +49,31 @@ export class CreateUploadsTable1749732605602 implements MigrationInterface {
     }),
   ];
 
+  private indices = [
+    new TableIndex({
+      name: 'idx_uploads_file_mimetype',
+      columnNames: ['file_mimetype'],
+    }),
+    new TableIndex({
+      name: 'idx_uploads_file_size',
+      columnNames: ['file_size'],
+    }),
+    new TableIndex({
+      name: 'idx_uploads_created_at',
+      columnNames: ['created_at'],
+    }),
+    new TableIndex({
+      name: 'idx_uploads_updated_at',
+      columnNames: ['updated_at'],
+    }),
+  ];
+
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
         name: this.tableName,
         columns: this.columns,
+        indices: this.indices,
       }),
     );
   }

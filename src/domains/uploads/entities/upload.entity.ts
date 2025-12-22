@@ -13,4 +13,10 @@ export class Upload extends BaseEntity<UploadDto> {
 
   @Column({ type: 'varchar', length: 255 })
   relative_url: string;
+
+  @Column({ type: 'varchar', length: 255 })
+  file_mimetype: string;
+
+  @Column({ type: 'int' })
+  file_size: number;
 }

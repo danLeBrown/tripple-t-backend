@@ -1,6 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsNotEmpty, IsOptional, IsString, Matches } from 'class-validator';
+import {
+  IsMimeType,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsPositive,
+  IsString,
+  Matches,
+} from 'class-validator';
 
 import {
   getFileExtension,
@@ -40,4 +48,17 @@ export class CreateUploadDto {
     message: 'Invalid relative URL format',
   })
   relative_url: string;
+
+  @ApiProperty({
+    example: 'application/pdf',
+  })
+  @IsMimeType()
+  file_mimetype: string;
+
+  @ApiProperty({
+    example: 1000,
+  })
+  @IsNumber({ maxDecimalPlaces: 0, allowInfinity: false })
+  @IsPositive()
+  file_size: number;
 }

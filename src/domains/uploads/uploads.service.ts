@@ -26,7 +26,14 @@ export class UploadsService {
     private s3Service: IUploadService,
   ) {}
 
-  async upload(name: string, file: Express.Multer.File) {
+  async upload(
+    dto: {
+      name: string;
+      file_mimetype: string;
+      file_size: number;
+    },
+    file: Express.Multer.File,
+  ) {
     const exe = await this.s3Service.upload(file);
 
     if (!exe) {
@@ -36,7 +43,7 @@ export class UploadsService {
     }
 
     return this.create({
-      name,
+      ...dto,
       relative_url: exe,
     });
   }

@@ -61,6 +61,8 @@ describe('UploadsController (e2e)', () => {
         .post('/v1/uploads', {
           name: 'Test Upload',
           relative_url: '2025/10/test.png',
+          file_mimetype: 'image/png',
+          file_size: 1000,
         } satisfies CreateUploadDto)
         .expect(201)
         .end((err, res) => {
@@ -93,6 +95,8 @@ describe('UploadsController (e2e)', () => {
         .post('/v1/uploads/file')
         .field({
           name: 'Test File Upload',
+          file_mimetype: 'image/png',
+          file_size: 1000,
         })
         .attach('file', path.join(__dirname, '../mock/image.png'), {
           filename: 'image.png',
