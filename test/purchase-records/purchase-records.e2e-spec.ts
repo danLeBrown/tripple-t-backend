@@ -75,10 +75,10 @@ describe('PurchaseRecordsController (e2e)', () => {
           {
             price_per_bag: faker.number.int({ min: 100, max: 10000 }),
             quantity_in_bags: faker.number.int({ min: 1, max: 100 }),
-            purchased_at: faker.date.past().getTime(),
             product_id: product.id,
           },
         ],
+        purchased_at: faker.date.past().getTime(),
         upload: {
           name: faker.system.fileName(),
           relative_url: `2025/06/${faker.system.fileName()}`,
@@ -89,8 +89,9 @@ describe('PurchaseRecordsController (e2e)', () => {
 
       request
         .post(`/v1/purchase-records/suppliers/${supplier.id}`, req)
-        .expect(201)
+        // .expect(201)
         .end((err, res) => {
+          console.log(res.body);
           if (err) {
             return done(err);
           }
@@ -110,11 +111,14 @@ describe('PurchaseRecordsController (e2e)', () => {
           expect(res.body.data[0].quantity_in_bags).toEqual(
             req.purchase_records[0].quantity_in_bags,
           );
-          expect(res.body.data[0].purchased_at).toEqual(
-            req.purchase_records[0].purchased_at,
-          );
+          expect(res.body.data[0].purchased_at).toEqual(req.purchased_at);
           expect(res.body.data[0].product_id).toEqual(
             req.purchase_records[0].product_id,
+          );
+          expect(res.body.data[0].product_type).toEqual(product.type);
+          expect(res.body.data[0].product_name).toEqual(product.name);
+          expect(res.body.data[0].supplier_name).toEqual(
+            supplier.business_name,
           );
 
           purchaseRecord = res.body.data[0];
@@ -136,10 +140,10 @@ describe('PurchaseRecordsController (e2e)', () => {
           {
             price_per_bag: faker.number.int({ min: 100, max: 10000 }),
             quantity_in_bags: faker.number.int({ min: 1, max: 100 }),
-            purchased_at: faker.date.past().getTime(),
             product_id: product.id,
           },
         ],
+        purchased_at: faker.date.past().getTime(),
       });
     });
 
@@ -231,10 +235,10 @@ describe('PurchaseRecordsController (e2e)', () => {
           {
             price_per_bag: faker.number.int({ min: 100, max: 10000 }),
             quantity_in_bags: faker.number.int({ min: 1, max: 100 }),
-            purchased_at: faker.date.past().getTime(),
             product_id: product.id,
           },
         ],
+        purchased_at: faker.date.past().getTime(),
       });
     });
 

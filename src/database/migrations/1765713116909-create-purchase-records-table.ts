@@ -36,6 +36,11 @@ export class CreatePurchaseRecordsTable1765713116909
       length: '255',
     }),
     new TableColumn({
+      name: 'product_type',
+      type: 'varchar',
+      length: '255',
+    }),
+    new TableColumn({
       name: 'supplier_id',
       type: 'uuid',
       isNullable: true,
@@ -111,6 +116,10 @@ export class CreatePurchaseRecordsTable1765713116909
     new TableIndex({
       name: 'idx_purchase_records_product_name',
       columnNames: ['product_name'],
+    }),
+    new TableIndex({
+      name: 'idx_purchase_records_product_type',
+      columnNames: ['product_type'],
     }),
     new TableIndex({
       name: 'idx_purchase_records_supplier_id',

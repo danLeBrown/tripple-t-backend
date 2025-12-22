@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 import { ProductDto } from '@/domains/shared/products/dto/product.dto';
+import { ProductType } from '@/domains/shared/products/types';
 import { SupplierDto } from '@/domains/suppliers/dto/supplier.dto';
 import { UploadDto } from '@/domains/uploads/dto/upload.dto';
 
@@ -19,7 +20,18 @@ export class PurchaseRecordDto extends BaseDto {
     example: 'a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6',
   })
   product_id: string;
+
+  @ApiProperty({
+    description: 'Name of the associated product',
+    example: 'John Doe',
+  })
   product_name: string;
+
+  @ApiProperty({
+    description: 'Type of the associated product',
+    example: 'Bottle',
+  })
+  product_type: ProductType;
 
   @ApiProperty({
     description: 'ID of the associated supplier',
@@ -80,6 +92,7 @@ export class PurchaseRecordDto extends BaseDto {
     this.upload_id = purchaseRecord.upload_id;
     this.product_id = purchaseRecord.product_id;
     this.product_name = purchaseRecord.product_name;
+    this.product_type = purchaseRecord.product_type;
     this.supplier_id = purchaseRecord.supplier_id;
     this.supplier_name = purchaseRecord.supplier_name;
     this.quantity_in_bags = purchaseRecord.quantity_in_bags;

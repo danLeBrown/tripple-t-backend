@@ -50,5 +50,5 @@ export class CreatePurchaseRecordDto {
 
 export class CreatePurchaseRecordWithoutUploadAndSupplierDto extends OmitType(
   CreatePurchaseRecordDto,
-  ['upload_id', 'supplier_id'] as const,
+  ['upload_id', 'supplier_id', 'purchased_at'] as const,
 ) {}

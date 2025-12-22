@@ -63,11 +63,15 @@ export class PurchaseRecordsService {
           product_name: products.find(
             (product) => product.id === record.product_id,
           )?.name,
+          product_type: products.find(
+            (product) => product.id === record.product_id,
+          )?.type,
           supplier_name: supplier.business_name,
           total_price: calculateTotalPrice({
             quantity_in_bags: record.quantity_in_bags,
             price_per_bag: record.price_per_bag,
           }),
+          purchased_at: dto.purchased_at,
         })),
       ),
     );
@@ -84,7 +88,9 @@ export class PurchaseRecordsService {
       order_direction = 'asc',
     } = query;
 
-    const qb = this.repo.createQueryBuilder('purchase_record');
+    const qb = this.repo
+      .createQueryBuilder('purchase_record')
+      .leftJoinAndSelect('purchase_record.upload', 'upload');
 
     if (search_query) {
       qb.where('LOWER(purchase_record.product_name) LIKE :search_query')
@@ -124,7 +130,12 @@ export class PurchaseRecordsService {
   }
 
   async findOneByOrFail(query: FindOptionsWhere<PurchaseRecord>) {
-    const record = await this.repo.findOneBy(query);
+    const record = await this.repo.findOne({
+      where: query,
+      relations: {
+        upload: true,
+      },
+    });
 
     if (!record) {
       throw new NotFoundException('Purchase record not found');

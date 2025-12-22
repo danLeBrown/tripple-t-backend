@@ -2,6 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 
 import { SetDto } from '@/decorators/set-dto.decorator';
 import { Product } from '@/domains/shared/products/entities/product.entity';
+import { ProductType } from '@/domains/shared/products/types';
 import { Supplier } from '@/domains/suppliers/entities/supplier.entity';
 import { Upload } from '@/domains/uploads/entities/upload.entity';
 
@@ -19,6 +20,9 @@ export class PurchaseRecord extends BaseEntity<PurchaseRecordDto> {
 
   @Column({ type: 'varchar', length: 255 })
   product_name: string;
+
+  @Column({ type: 'varchar', length: 255 })
+  product_type: ProductType;
 
   @Column({ type: 'uuid' })
   supplier_id: string;
