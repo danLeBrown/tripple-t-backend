@@ -6,5 +6,5 @@ export function generateProductName(data: {
   colour: string;
   unit: string;
 }) {
-  return `${data.size} ${data.unit.toLowerCase()} ${data.type} ${data.colour}`;
+  return `${data.size} ${data.unit} ${data.colour} ${data.type}`.toLowerCase();
 }

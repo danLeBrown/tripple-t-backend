@@ -3,6 +3,7 @@ import {
   Inject,
   Injectable,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getUnixTime } from 'date-fns';
@@ -63,6 +64,14 @@ export class UploadsService {
         created_at: 'DESC',
       },
     });
+  }
+
+  async findOneByOrFail(query: FindOptionsWhere<Upload>) {
+    const upload = await this.findOneBy(query);
+    if (!upload) {
+      throw new NotFoundException('Upload not found');
+    }
+    return upload;
   }
 
   async findOneBy(query: FindOptionsWhere<Upload>) {

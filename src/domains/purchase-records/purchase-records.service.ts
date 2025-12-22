@@ -26,6 +26,20 @@ export class PurchaseRecordsService {
     private readonly uploadsService: UploadsService,
   ) {}
 
+  private async getUploadId(dto: CreateSupplierPurchaseRecordDto) {
+    if (!dto.upload_id && !dto.upload) {
+      throw new BadRequestException('Upload is required');
+    }
+    if (dto.upload_id) {
+      const upload = await this.uploadsService.findOneByOrFail({
+        id: dto.upload_id,
+      });
+
+      return upload.id;
+    }
+    return (await this.uploadsService.create(dto.upload!)).id;
+  }
+
   async createForSuppliers(
     supplier_id: string,
     dto: CreateSupplierPurchaseRecordDto,
@@ -34,7 +48,7 @@ export class PurchaseRecordsService {
       id: supplier_id,
     });
 
-    const upload = await this.uploadsService.create(dto.upload);
+    const upload_id = await this.getUploadId(dto);
 
     const products = await this.productsService.findBy({
       id: In(dto.purchase_records.map((record) => record.product_id)),
@@ -45,7 +59,7 @@ export class PurchaseRecordsService {
         dto.purchase_records.map((record) => ({
           ...record,
           supplier_id: supplier.id,
-          upload_id: upload.id,
+          upload_id,
           product_name: products.find(
             (product) => product.id === record.product_id,
           )?.name,
