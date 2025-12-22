@@ -4,6 +4,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuditLog } from '@/decorators/audit-log.decorator';
 
 import { CreatePurchaseWithInvoiceDto } from './dto/create-purchase-with-invoice.dto';
+import { PurchaseDto } from './dto/purchase.dto';
 import { PurchasesService } from './purchases.service';
 
 @ApiBearerAuth()
@@ -24,6 +25,7 @@ export class PurchasesController {
       supplier_id,
       dto,
     );
+
     return {
       data: PurchaseDto.collection(data),
     };
