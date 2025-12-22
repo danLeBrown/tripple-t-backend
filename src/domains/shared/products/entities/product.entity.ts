@@ -1,4 +1,4 @@
-import { Column, Entity } from 'typeorm';
+import { AfterLoad, Column, Entity } from 'typeorm';
 
 import { SetDto } from '@/decorators/set-dto.decorator';
 
@@ -23,4 +23,11 @@ export class Product extends BaseEntity<ProductDto> {
 
   @Column({ unique: true, type: 'varchar', length: 255 })
   slug: string;
+
+  @AfterLoad()
+  private setName() {
+    this.name = `${this.size} ${this.unit.toLowerCase()} ${this.type} ${this.colour}`;
+  }
+
+  name: string;
 }

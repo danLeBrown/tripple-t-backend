@@ -1,4 +1,3 @@
-import { HttpService } from '@nestjs/axios';
 import {
   BadRequestException,
   Inject,
@@ -6,31 +5,26 @@ import {
   Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { catchError, firstValueFrom } from 'rxjs';
+import { getUnixTime } from 'date-fns';
 import { FindOptionsWhere, Repository } from 'typeorm';
 
-import { AppConfigService } from '@/app-configs/app-config.service';
 import { generateObjectKey } from '@/helpers/file.helper';
 
 import { CreateUploadDto } from './dto/create-upload.dto';
+import { SearchAndPaginateUploadDto } from './dto/query-and-paginate-upload.dto';
 import { Upload } from './entities/upload.entity';
 import { IUploadService } from './interfaces/upload';
 
 @Injectable()
 export class UploadsService {
   logger = new Logger(UploadsService.name);
-  private proxyBaseURL: string;
 
   constructor(
     @InjectRepository(Upload)
     private repo: Repository<Upload>,
     @Inject('IUploadService')
     private s3Service: IUploadService,
-    private configService: AppConfigService,
-    private httpService: HttpService,
-  ) {
-    this.proxyBaseURL = this.configService.get('UPLOAD_PROXY_BASE_URL');
-  }
+  ) {}
 
   async upload(name: string, file: Express.Multer.File) {
     const exe = await this.s3Service.upload(file);
@@ -75,10 +69,6 @@ export class UploadsService {
     key?: string;
     file_mimetype?: string;
   }) {
-    if (this.proxyBaseURL) {
-      return this.getPresignedURLFromProxy(dto);
-    }
-
     if (dto.action === 'download') {
       if (!dto.key) {
         throw new BadRequestException('Key is required for download action');
@@ -112,61 +102,44 @@ export class UploadsService {
     return this.repo.delete(id);
   }
 
-  private async getPresignedURLFromProxy(dto: {
-    action: 'upload' | 'download';
-    key?: string;
-    file_mimetype?: string;
-  }) {
-    if (dto.action === 'download') {
-      if (!dto.key) {
-        throw new BadRequestException('Key is required for download action');
-      }
+  async search(query: SearchAndPaginateUploadDto) {
+    const {
+      query: search_query,
+      from_time,
+      to_time,
+      limit = 0,
+      page = 0,
+      order_by = 'created_at',
+      order_direction = 'asc',
+    } = query;
 
-      const exe = await firstValueFrom(
-        this.httpService
-          .post<{
-            data: { url: string; key: string };
-          }>(`${this.proxyBaseURL}/v1/uploads/presigned-url/download`, {
-            key: dto.key,
-          })
-          .pipe(
-            catchError((error) => {
-              this.logger.error(
-                `Error fetching presigned URL from proxy: ${error.message}`,
-                error.stack,
-              );
-              throw new BadRequestException('Failed to generate presigned URL');
-            }),
-          ),
-      );
+    const qb = this.repo.createQueryBuilder('upload');
 
-      return exe.data;
+    if (search_query) {
+      qb.where('LOWER(upload.name) LIKE :search_query')
+        .orWhere('LOWER(upload.relative_url) LIKE :search_query')
+        .setParameter('search_query', `%${search_query.toLowerCase()}%`);
     }
 
-    if (!dto.file_mimetype) {
-      throw new BadRequestException(
-        'File mime type is required for upload action',
-      );
+    if (from_time) {
+      qb.andWhere('upload.created_at >= :from_time', {
+        from_time: getUnixTime(new Date(from_time * 1000)),
+      });
     }
 
-    const exe = await firstValueFrom(
-      this.httpService
-        .post<{
-          data: { url: string; key: string };
-        }>(`${this.proxyBaseURL}/v1/uploads/presigned-url/upload`, {
-          file_mimetype: dto.file_mimetype,
-        })
-        .pipe(
-          catchError((error) => {
-            this.logger.error(
-              `Error fetching presigned URL from proxy: ${error.message}`,
-              error.stack,
-            );
-            throw new BadRequestException('Failed to generate presigned URL');
-          }),
-        ),
-    );
+    if (to_time) {
+      qb.andWhere('upload.created_at <= :to_time', {
+        to_time: getUnixTime(new Date(to_time * 1000)),
+      });
+    }
 
-    return exe.data;
+    return qb
+      .orderBy(
+        order_by === 'name' ? 'upload.name' : 'upload.created_at',
+        order_direction.toUpperCase() as 'ASC' | 'DESC',
+      )
+      .take(limit > 0 ? limit : undefined)
+      .skip(page && limit ? (page - 1) * limit : undefined)
+      .getManyAndCount();
   }
 }

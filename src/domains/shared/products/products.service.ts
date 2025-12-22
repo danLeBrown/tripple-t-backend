@@ -129,4 +129,10 @@ export class ProductsService {
 
     return this.repo.update(product.id, dto);
   }
+
+  async findBy(query: FindOptionsWhere<Product>) {
+    return this.repo.find({
+      where: query,
+    });
+  }
 }

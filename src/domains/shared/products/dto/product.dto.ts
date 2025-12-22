@@ -35,6 +35,12 @@ export class ProductDto extends BaseDto {
   })
   slug: string;
 
+  @ApiProperty({
+    description: 'Name of the product',
+    example: '100 ml Red',
+  })
+  name: string;
+
   constructor(product: Product) {
     super(product);
 
@@ -43,5 +49,7 @@ export class ProductDto extends BaseDto {
     this.colour = product.colour;
     this.unit = product.unit;
     this.slug = product.slug;
+
+    this.name = product.name;
   }
 }
