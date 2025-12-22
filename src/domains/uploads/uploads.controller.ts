@@ -61,6 +61,10 @@ export class UploadsController {
   async uploadFile(
     @Body('name')
     name: string,
+    @Body('file_mimetype')
+    file_mimetype: string,
+    @Body('file_size')
+    file_size: number,
     @UploadedFile(
       new ParseFilePipeBuilder()
         .addFileTypeValidator({
@@ -80,7 +84,24 @@ export class UploadsController {
       throw new BadRequestException('Name is required for the upload.');
     }
 
-    const upload = await this.uploadsService.upload(name, file);
+    if (!file_mimetype) {
+      throw new BadRequestException(
+        'File mime type is required for the upload.',
+      );
+    }
+
+    if (!file_size) {
+      throw new BadRequestException('File size is required for the upload.');
+    }
+
+    const upload = await this.uploadsService.upload(
+      {
+        name,
+        file_mimetype,
+        file_size,
+      },
+      file,
+    );
 
     return {
       data: upload.toDto(),

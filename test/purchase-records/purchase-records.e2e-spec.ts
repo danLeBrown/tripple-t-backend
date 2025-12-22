@@ -82,6 +82,8 @@ describe('PurchaseRecordsController (e2e)', () => {
         upload: {
           name: faker.system.fileName(),
           relative_url: `2025/06/${faker.system.fileName()}`,
+          file_mimetype: 'image/png',
+          file_size: 1000,
         },
       } satisfies CreateSupplierPurchaseRecordDto;
 
@@ -127,6 +129,8 @@ describe('PurchaseRecordsController (e2e)', () => {
         upload: {
           name: faker.system.fileName(),
           relative_url: `2025/06/${faker.system.fileName()}`,
+          file_mimetype: 'image/png',
+          file_size: 1000,
         },
         purchase_records: [
           {
@@ -220,6 +224,8 @@ describe('PurchaseRecordsController (e2e)', () => {
         upload: {
           name: faker.system.fileName(),
           relative_url: `2025/06/${faker.system.fileName()}`,
+          file_mimetype: 'image/png',
+          file_size: 1000,
         },
         purchase_records: [
           {

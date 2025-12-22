@@ -16,10 +16,22 @@ export class UploadDto extends BaseDto {
   })
   relative_url: string;
 
+  @ApiProperty({
+    example: 'application/pdf',
+  })
+  file_mimetype: string;
+
+  @ApiProperty({
+    example: 1000,
+  })
+  file_size: number;
+
   constructor(u: Upload) {
     super(u);
     this.name = u.name;
     this.relative_url = u.relative_url;
+    this.file_mimetype = u.file_mimetype;
+    this.file_size = u.file_size;
   }
 
   static collection<T extends BaseDto>(entities: Array<BaseEntity<T>>): T[] {
