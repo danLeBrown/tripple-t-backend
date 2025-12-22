@@ -4,7 +4,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ColoursController } from './colours/colours.controller';
 import { ColoursService } from './colours/colours.service';
 import { Colour } from './colours/entities/colour.entity';
-import { Document } from './documents/entities/document.entity';
 import { Product } from './products/entities/product.entity';
 import { ProductsController } from './products/products.controller';
 import { ProductsService } from './products/products.service';
@@ -17,7 +16,7 @@ import { UnitsService } from './units/units.service';
 
 @Global()
 @Module({
-  imports: [TypeOrmModule.forFeature([Document, Unit, Colour, Size, Product])],
+  imports: [TypeOrmModule.forFeature([Unit, Colour, Size, Product])],
   controllers: [
     UnitsController,
     ColoursController,

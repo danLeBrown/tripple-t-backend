@@ -13,6 +13,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { SearchAndPaginateProductDto } from './dto/query-and-paginate-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
+import { generateProductName } from './helpers';
 
 @Injectable()
 export class ProductsService {
@@ -43,7 +44,11 @@ export class ProductsService {
       );
     }
 
-    const product = this.repo.create({ ...dto, slug });
+    const product = this.repo.create({
+      ...dto,
+      slug,
+      name: generateProductName(dto),
+    });
 
     return this.repo.save(product);
   }
@@ -127,6 +132,20 @@ export class ProductsService {
       );
     }
 
-    return this.repo.update(product.id, dto);
+    return this.repo.update(product.id, {
+      ...dto,
+      name: generateProductName({
+        type: dto.type ?? product.type,
+        size: dto.size ?? product.size,
+        colour: dto.colour ?? product.colour,
+        unit: dto.unit ?? product.unit,
+      }),
+    });
+  }
+
+  async findBy(query: FindOptionsWhere<Product>) {
+    return this.repo.find({
+      where: query,
+    });
   }
 }

@@ -1,11 +1,10 @@
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 
 import { SetDto } from '@/decorators/set-dto.decorator';
 
 import { BaseEntity } from '../../../common/base.entity';
 import { ExpenseDto } from '../dto/expense.dto';
 import { ExpenseCategory } from '../types';
-import { ExpenseDocument } from './expense-upload.entity';
 
 @Entity('expenses')
 @SetDto(ExpenseDto)
@@ -30,10 +29,4 @@ export class Expense extends BaseEntity<ExpenseDto> {
     },
   })
   reported_at: number;
-
-  @OneToMany(
-    () => ExpenseDocument,
-    (expenseDocument) => expenseDocument.expense,
-  )
-  expense_documents?: ExpenseDocument[];
 }

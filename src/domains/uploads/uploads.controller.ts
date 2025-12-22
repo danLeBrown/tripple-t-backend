@@ -2,14 +2,24 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   HttpStatus,
   ParseFilePipeBuilder,
   Post,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
+
+import { PaginatedDto } from '@/common/dto/paginated.dto';
+import { AuditLog } from '@/decorators/audit-log.decorator';
 
 import { UnauthenticatedRoute } from '../../decorators/unauthenticated.decorator';
 import { CreateUploadDto } from './dto/create-upload.dto';
@@ -17,6 +27,7 @@ import {
   GenerateSignedUrlForDownloadDto,
   GenerateSignedUrlForUploadDto,
 } from './dto/generate-signed-url.dto';
+import { SearchAndPaginateUploadDto } from './dto/query-and-paginate-upload.dto';
 import { UploadDto } from './dto/upload.dto';
 import { UploadsService } from './uploads.service';
 
@@ -150,5 +161,34 @@ export class UploadsController {
     return {
       data,
     };
+  }
+  @ApiOkResponse({
+    description: 'Uploads retrieved successfully',
+    schema: {
+      allOf: [
+        { $ref: getSchemaPath(PaginatedDto) },
+        {
+          properties: {
+            data: {
+              type: 'array',
+              items: { $ref: getSchemaPath(UploadDto) },
+            },
+          },
+        },
+      ],
+    },
+  })
+  @AuditLog({
+    action: 'Get uploads',
+  })
+  @Get('search')
+  async search(@Query() query: SearchAndPaginateUploadDto) {
+    const [data, total] = await this.uploadsService.search(query);
+
+    return new PaginatedDto(UploadDto.collection(data), {
+      total,
+      page: query.page ?? 0,
+      limit: query.limit ?? 0,
+    });
   }
 }

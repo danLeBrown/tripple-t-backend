@@ -3,7 +3,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { BaseDto } from '../../../common/dto/base.dto';
 import { Expense } from '../entities/expense.entity';
 import { ExpenseCategory } from '../types';
-import { ExpenseDocumentDto } from './expense-document.dto';
 
 export class ExpenseDto extends BaseDto {
   @ApiProperty({
@@ -30,12 +29,6 @@ export class ExpenseDto extends BaseDto {
   })
   reported_at: number;
 
-  @ApiProperty({
-    description: 'Documents associated with the expense',
-    type: () => [ExpenseDocumentDto],
-  })
-  expense_documents?: ExpenseDocumentDto[];
-
   constructor(expense: Expense) {
     super(expense);
 
@@ -43,11 +36,5 @@ export class ExpenseDto extends BaseDto {
     this.amount = expense.amount;
     this.narration = expense.narration;
     this.reported_at = expense.reported_at;
-
-    if (expense.expense_documents) {
-      this.expense_documents = ExpenseDocumentDto.collection(
-        expense.expense_documents,
-      );
-    }
   }
 }

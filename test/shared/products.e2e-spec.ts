@@ -6,6 +6,7 @@ import { UserDto } from '../../src/domains/auth/users/dto/user.dto';
 import { CreateProductDto } from '../../src/domains/shared/products/dto/create-product.dto';
 import { ProductDto } from '../../src/domains/shared/products/dto/product.dto';
 import { UpdateProductDto } from '../../src/domains/shared/products/dto/update-product.dto';
+import { generateProductName } from '../../src/domains/shared/products/helpers';
 import { ProductsService } from '../../src/domains/shared/products/products.service';
 import {
   getCsrfToken,
@@ -70,6 +71,7 @@ describe('ProductsController (e2e)', () => {
           expect(res.body.data.size).toEqual(req.size);
           expect(res.body.data.colour).toEqual(req.colour);
           expect(res.body.data.unit).toEqual(req.unit);
+          expect(res.body.data.name).toEqual(generateProductName(req));
           product = res.body.data;
 
           return done();
