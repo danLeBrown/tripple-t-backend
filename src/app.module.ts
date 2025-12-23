@@ -15,6 +15,7 @@ import { AppDataSource } from './data-source';
 import { AuditLogsModule } from './domains/audit-logs/dto/audit-logs.module';
 import { AuditLogInterceptor } from './domains/audit-logs/interceptors/audit-log.interceptor';
 import { AuthModule } from './domains/auth/auth.module';
+import { BottleProductionsModule } from './domains/bottle-productions/bottle-productions.module';
 import { CustomersModule } from './domains/customers/customers.module';
 import { ExpensesModule } from './domains/expenses/expenses.module';
 import { NotificationsModule } from './domains/notifications/notifications.module';
@@ -83,6 +84,7 @@ import { ValidatorsModule } from './validators/validators.module';
     ExpensesModule,
     SuppliersModule,
     PurchaseRecordsModule,
+    BottleProductionsModule,
   ],
   controllers: [AppController],
   providers: [

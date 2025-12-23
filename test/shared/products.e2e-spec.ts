@@ -234,7 +234,7 @@ describe('ProductsController (e2e)', () => {
       request
         .patch(`/v1/products/${product.id}`, req)
         .expect(200)
-        .end((err, res) => {
+        .end((err, _res) => {
           if (err) {
             return done(err);
           }
