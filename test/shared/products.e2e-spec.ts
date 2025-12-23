@@ -88,6 +88,30 @@ describe('ProductsController (e2e)', () => {
 
       request.post('/v1/products', req).expect(400, done);
     });
+
+    it('should create a product with decimal size value', (done) => {
+      const req = {
+        type: 'Bottle',
+        size: 18.5,
+        colour: 'Blue',
+        unit: 'ml',
+      } satisfies CreateProductDto;
+
+      request
+        .post('/v1/products', req)
+        .expect(201)
+        .end((err, res) => {
+          if (err) {
+            return done(err);
+          }
+
+          expect(res.body.data.size).toEqual(18.5);
+          expect(res.body.data.type).toEqual(req.type);
+          expect(res.body.data.colour).toEqual(req.colour);
+          expect(res.body.data.unit).toEqual(req.unit);
+          return done();
+        });
+    });
   });
 
   describe('it should retrieve products', () => {
@@ -200,6 +224,34 @@ describe('ProductsController (e2e)', () => {
       } satisfies UpdateProductDto;
 
       request.patch(`/v1/products/${product.id}`, req).expect(200, done);
+    });
+
+    it('/:id (PATCH) should update a product with decimal size value', (done) => {
+      const req = {
+        size: 20.75,
+      } satisfies UpdateProductDto;
+
+      request
+        .patch(`/v1/products/${product.id}`, req)
+        .expect(200)
+        .end((err, res) => {
+          if (err) {
+            return done(err);
+          }
+
+          // Verify the update by fetching the product
+          request
+            .get(`/v1/products/${product.id}`)
+            .expect(200)
+            .end((fetchErr, fetchRes) => {
+              if (fetchErr) {
+                return done(fetchErr);
+              }
+
+              expect(fetchRes.body.data.size).toEqual(20.75);
+              return done();
+            });
+        });
     });
 
     it('/:id (PATCH) should throw an error if product does not exist', (done) => {
