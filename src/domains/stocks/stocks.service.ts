@@ -10,6 +10,7 @@ import { DataSource } from 'typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
 
 import { ProductsService } from '../shared/products/products.service';
+import { AdjustStockParams } from './dto/adjust-stock-params.dto';
 import { CreateStockDto } from './dto/create-stock.dto';
 import { SearchAndPaginateStockDto } from './dto/query-and-paginate-stock.dto';
 import { UpdateStockDto } from './dto/update-stock.dto';
@@ -116,12 +117,9 @@ export class StocksService {
       .getManyAndCount();
   }
 
-  async adjustQuantity(
-    productId: string,
-    delta: number,
-    adjustmentType: string,
-    reason?: string,
-  ) {
+  async adjustQuantity(params: AdjustStockParams) {
+    const { productId, delta, adjustmentType, reason } = params;
+
     return this.dataSource.transaction(async (manager) => {
       const stock = await manager.findOne(Stock, {
         where: { product_id: productId },
@@ -156,33 +154,29 @@ export class StocksService {
         quantity_delta: delta,
         quantity_before: quantityBefore,
         quantity_after: newQuantity,
-        reason: reason || null,
+        reason,
       });
 
       // Return updated stock
-      return manager.findOne(Stock, {
+      return manager.findOneOrFail(Stock, {
         where: { product_id: productId },
         relations: ['product'],
       });
     });
   }
 
-  async increaseQuantity(
-    productId: string,
-    amount: number,
-    adjustmentType: string,
-    reason?: string,
-  ) {
-    return this.adjustQuantity(productId, amount, adjustmentType, reason);
+  async increaseQuantity(params: AdjustStockParams) {
+    return this.adjustQuantity({
+      ...params,
+      delta: Math.abs(params.delta),
+    });
   }
 
-  async decreaseQuantity(
-    productId: string,
-    amount: number,
-    adjustmentType: string,
-    reason?: string,
-  ) {
-    return this.adjustQuantity(productId, -amount, adjustmentType, reason);
+  async decreaseQuantity(params: AdjustStockParams) {
+    return this.adjustQuantity({
+      ...params,
+      delta: -Math.abs(params.delta),
+    });
   }
 
   async update(id: string, dto: UpdateStockDto) {

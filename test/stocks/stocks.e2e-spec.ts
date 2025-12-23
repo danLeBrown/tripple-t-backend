@@ -246,7 +246,7 @@ describe('StocksController (e2e)', () => {
 
     it('/:id (PATCH)', (done) => {
       const req = {
-        quantity: 250,
+        unit: 'liters',
       } satisfies UpdateStockDto;
 
       request
@@ -263,7 +263,7 @@ describe('StocksController (e2e)', () => {
 
     it('/:id (PATCH) should throw an error if stock does not exist', (done) => {
       const req = {
-        quantity: 100,
+        unit: 'pcs',
       } satisfies UpdateStockDto;
 
       request.patch(`/v1/stocks/${faker.string.uuid()}`, req).expect(404, done);
@@ -391,12 +391,12 @@ describe('StocksController (e2e)', () => {
       ];
 
       const promises = adjustments.map((adj) =>
-        stocksService.adjustQuantity(
-          stock.product_id,
-          adj.delta,
-          adj.type,
-          'Concurrent test',
-        ),
+        stocksService.adjustQuantity({
+          productId: stock.product_id,
+          delta: adj.delta,
+          adjustmentType: adj.type,
+          reason: 'Concurrent test',
+        }),
       );
 
       await Promise.all(promises);

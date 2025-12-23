@@ -139,12 +139,12 @@ export class StocksController {
     @Body() dto: AdjustStockDto,
   ) {
     const stock = await this.stocksService.findOneByOrFail({ id });
-    const data = await this.stocksService.adjustQuantity(
-      stock.product_id,
-      dto.quantity_delta,
-      dto.adjustment_type,
-      dto.reason,
-    );
+    const data = await this.stocksService.adjustQuantity({
+      productId: stock.product_id,
+      delta: dto.quantity_delta,
+      adjustmentType: dto.adjustment_type,
+      reason: dto.reason,
+    });
 
     return {
       data: data.toDto(),

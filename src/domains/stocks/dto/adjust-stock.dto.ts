@@ -23,9 +23,8 @@ export class AdjustStockDto {
   @ApiProperty({
     description: 'Reason for the adjustment',
     example: 'Manual stock correction',
-    required: false,
   })
-  @IsOptional()
   @IsString()
-  reason?: string;
+  @IsNotEmpty()
+  reason: string;
 }
