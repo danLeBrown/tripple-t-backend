@@ -26,7 +26,7 @@ services:
       # Optional: mount pnpm cache for faster rebuilds
       - ~/.pnpm-store:/root/.pnpm-store
     networks:
-      - connect_crm_network
+      - tripple_t_network
     # Optional: add healthcheck
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:3000/health']
@@ -54,7 +54,7 @@ services:
   #     - DB_DATABASE=${DB_DATABASE}
   #     - REDIS_URL=redis://redis:6379
   #   networks:
-  #     - connect_crm_network
+  #     - tripple_t_network
 
   adminer:
     image: adminer
@@ -64,7 +64,7 @@ services:
     ports:
       - 8080:8080
     networks:
-      - connect_crm_network
+      - tripple_t_network
 
   pgsql:
     image: 'postgres:17-alpine3.22'
@@ -78,18 +78,18 @@ services:
     volumes:
       - connect_crm:/var/lib/postgresql/data
     networks:
-      - connect_crm_network
+      - tripple_t_network
 
   redis:
     image: 'redis:6.2.19-alpine'
     ports:
       - '6379:6379'
     networks:
-      - connect_crm_network
+      - tripple_t_network
 
 volumes:
   connect_crm:
 
 networks:
-  connect_crm_network:
+  tripple_t_network:
     driver: bridge
