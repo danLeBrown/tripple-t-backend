@@ -19,15 +19,15 @@ export class QueryBottleProductionDto extends IntersectionType(
 ) {
   @IsOptional()
   @IsUUID()
-  customer_id?: string | null;
+  preform_supplier_id?: string;
 
   @IsOptional()
   @IsUUID()
-  supplier_id?: string | null;
+  preform_product_id?: string;
 
   @IsOptional()
   @IsUUID()
-  product_id?: string | null;
+  bottle_product_id?: string;
 }
 
 export class SearchBottleProductionDto extends IntersectionType(

@@ -1,25 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { BaseDto } from '../../../common/dto/base.dto';
-import { CustomerDto } from '@/domains/customers/dto/customer.dto';
 import { ProductDto } from '@/domains/shared/products/dto/product.dto';
 import { SupplierDto } from '@/domains/suppliers/dto/supplier.dto';
+
+import { BaseDto } from '../../../common/dto/base.dto';
 import { BottleProduction } from '../entities/bottle-production.entity';
 
 export class BottleProductionDto extends BaseDto {
   @ApiProperty({
-    description: 'ID of the customer (for third-party production)',
+    description: 'ID of the preform supplier',
     example: 'a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6',
-    nullable: true,
   })
-  customer_id: string | null;
-
-  @ApiProperty({
-    description: 'ID of the supplier (preform supplier)',
-    example: 'a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6',
-    nullable: true,
-  })
-  supplier_id: string | null;
+  preform_supplier_id: string;
 
   @ApiProperty({
     description: 'Name of the supplier (preform supplier)',
@@ -28,17 +20,28 @@ export class BottleProductionDto extends BaseDto {
   supplier_name: string;
 
   @ApiProperty({
-    description: 'ID of the product (preform product)',
+    description: 'ID of the preform product',
     example: 'a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6',
-    nullable: true,
   })
-  product_id: string | null;
+  preform_product_id: string;
 
   @ApiProperty({
     description: 'Name of the preform',
     example: '500ml Clear Preform',
   })
   preform_name: string;
+
+  @ApiProperty({
+    description: 'ID of the bottle product',
+    example: 'a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6',
+  })
+  bottle_product_id: string;
+
+  @ApiProperty({
+    description: 'Name of the bottle',
+    example: '500ml Clear Bottle',
+  })
+  bottle_name: string;
 
   @ApiProperty({
     description: 'Size of the preform',
@@ -114,62 +117,57 @@ export class BottleProductionDto extends BaseDto {
   notes: string | null;
 
   @ApiProperty({
-    description: 'The associated customer',
-    type: () => CustomerDto,
-    nullable: true,
-  })
-  customer?: CustomerDto | null;
-
-  @ApiProperty({
     description: 'The associated supplier',
     type: () => SupplierDto,
-    nullable: true,
   })
-  supplier?: SupplierDto | null;
+  supplier?: SupplierDto;
 
   @ApiProperty({
-    description: 'The associated product',
+    description: 'The associated preform product',
     type: () => ProductDto,
-    nullable: true,
   })
-  product?: ProductDto | null;
+  preform_product?: ProductDto;
+
+  @ApiProperty({
+    description: 'The associated bottle product',
+    type: () => ProductDto,
+  })
+  bottle_product?: ProductDto;
 
   constructor(production: BottleProduction) {
     super(production);
 
-    this.customer_id = production.customer_id;
-    this.supplier_id = production.supplier_id;
+    this.preform_supplier_id = production.preform_supplier_id;
     this.supplier_name = production.supplier_name;
-    this.product_id = production.product_id;
+    this.preform_product_id = production.preform_product_id;
     this.preform_name = production.preform_name;
+    this.bottle_product_id = production.bottle_product_id;
+    this.bottle_name = production.bottle_name;
     this.preform_size = production.preform_size;
     this.preform_color = production.preform_color;
     this.preforms_used = production.preforms_used;
     this.preforms_defective = production.preforms_defective;
-    this.preforms_successful = production.preforms_used - production.preforms_defective;
+    this.preforms_successful =
+      production.preforms_used - production.preforms_defective;
     this.bottle_size = production.bottle_size;
     this.bottle_color = production.bottle_color;
     this.bottles_produced = production.bottles_produced;
     this.bottles_defective = production.bottles_defective;
-    this.bottles_successful = production.bottles_produced - production.bottles_defective;
+    this.bottles_successful =
+      production.bottles_produced - production.bottles_defective;
     this.produced_at = production.produced_at;
     this.notes = production.notes;
-
-    if (production.customer) {
-      this.customer = production.customer.toDto();
-    }
 
     if (production.supplier) {
       this.supplier = production.supplier.toDto();
     }
 
-    if (production.product) {
-      this.product = production.product.toDto();
+    if (production.preform_product) {
+      this.preform_product = production.preform_product.toDto();
+    }
+
+    if (production.bottle_product) {
+      this.bottle_product = production.bottle_product.toDto();
     }
   }
-
-  static collection(productions: BottleProduction[]): BottleProductionDto[] {
-    return productions.map((production) => new BottleProductionDto(production));
-  }
 }
-

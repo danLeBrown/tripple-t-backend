@@ -21,14 +21,8 @@ export class CreateBottleProductionsTable1766496577000
       default: 'uuid_generate_v4()',
     }),
     new TableColumn({
-      name: 'customer_id',
+      name: 'preform_supplier_id',
       type: 'uuid',
-      isNullable: true,
-    }),
-    new TableColumn({
-      name: 'supplier_id',
-      type: 'uuid',
-      isNullable: true,
     }),
     new TableColumn({
       name: 'supplier_name',
@@ -36,12 +30,20 @@ export class CreateBottleProductionsTable1766496577000
       length: '255',
     }),
     new TableColumn({
-      name: 'product_id',
+      name: 'preform_product_id',
       type: 'uuid',
-      isNullable: true,
     }),
     new TableColumn({
       name: 'preform_name',
+      type: 'varchar',
+      length: '255',
+    }),
+    new TableColumn({
+      name: 'bottle_product_id',
+      type: 'uuid',
+    }),
+    new TableColumn({
+      name: 'bottle_name',
       type: 'varchar',
       length: '255',
     }),
@@ -112,44 +114,44 @@ export class CreateBottleProductionsTable1766496577000
 
   private foreignKeys = [
     new TableForeignKey({
-      name: 'fk_bottle_productions_customer_id',
-      columnNames: ['customer_id'],
-      referencedColumnNames: ['id'],
-      referencedTableName: 'customers',
-      onDelete: 'SET NULL',
-    }),
-    new TableForeignKey({
-      name: 'fk_bottle_productions_supplier_id',
-      columnNames: ['supplier_id'],
+      name: 'fk_bottle_productions_preform_supplier_id',
+      columnNames: ['preform_supplier_id'],
       referencedColumnNames: ['id'],
       referencedTableName: 'suppliers',
-      onDelete: 'SET NULL',
+      onDelete: 'RESTRICT',
     }),
     new TableForeignKey({
-      name: 'fk_bottle_productions_product_id',
-      columnNames: ['product_id'],
+      name: 'fk_bottle_productions_preform_product_id',
+      columnNames: ['preform_product_id'],
       referencedColumnNames: ['id'],
       referencedTableName: 'products',
-      onDelete: 'SET NULL',
+      onDelete: 'RESTRICT',
+    }),
+    new TableForeignKey({
+      name: 'fk_bottle_productions_bottle_product_id',
+      columnNames: ['bottle_product_id'],
+      referencedColumnNames: ['id'],
+      referencedTableName: 'products',
+      onDelete: 'RESTRICT',
     }),
   ];
 
   private indices = [
     new TableIndex({
-      name: 'idx_bottle_productions_customer_id',
-      columnNames: ['customer_id'],
-    }),
-    new TableIndex({
-      name: 'idx_bottle_productions_supplier_id',
-      columnNames: ['supplier_id'],
+      name: 'idx_bottle_productions_preform_supplier_id',
+      columnNames: ['preform_supplier_id'],
     }),
     new TableIndex({
       name: 'idx_bottle_productions_supplier_name',
       columnNames: ['supplier_name'],
     }),
     new TableIndex({
-      name: 'idx_bottle_productions_product_id',
-      columnNames: ['product_id'],
+      name: 'idx_bottle_productions_preform_product_id',
+      columnNames: ['preform_product_id'],
+    }),
+    new TableIndex({
+      name: 'idx_bottle_productions_bottle_product_id',
+      columnNames: ['bottle_product_id'],
     }),
     new TableIndex({
       name: 'idx_bottle_productions_preform_name',

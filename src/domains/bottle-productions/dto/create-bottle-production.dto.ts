@@ -14,21 +14,11 @@ import {
 
 export class CreateBottleProductionDto {
   @ApiProperty({
-    description: 'ID of the customer (for third-party production)',
-    example: 'a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6',
-    required: false,
-  })
-  @IsOptional()
-  @IsUUID()
-  customer_id?: string | null;
-
-  @ApiProperty({
-    description:
-      'ID of the supplier (preform supplier). If not provided, supplier_name is required.',
+    description: 'ID of the preform supplier',
     example: 'a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6',
   })
   @IsUUID()
-  supplier_id: string;
+  preform_supplier_id: string;
 
   @ApiProperty({
     description: 'ID of the preform product',
@@ -54,14 +44,6 @@ export class CreateBottleProductionDto {
     typeof value === 'string' ? parseFloat(value) : value,
   )
   preform_size: number;
-
-  @ApiProperty({
-    description: 'Color of the preform',
-    example: 'Clear',
-  })
-  @IsString()
-  @IsNotEmpty()
-  preform_color: string;
 
   @ApiProperty({
     description: 'Number of preforms used',

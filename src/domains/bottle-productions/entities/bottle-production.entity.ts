@@ -2,7 +2,6 @@ import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 import { decimalTransformer } from '@/common/transformers/decimal.transformer';
 import { SetDto } from '@/decorators/set-dto.decorator';
-import { Customer } from '@/domains/customers/entities/customer.entity';
 import { Product } from '@/domains/shared/products/entities/product.entity';
 import { Supplier } from '@/domains/suppliers/entities/supplier.entity';
 
@@ -12,11 +11,8 @@ import { BottleProductionDto } from '../dto/bottle-production.dto';
 @Entity({ name: 'bottle_productions' })
 @SetDto(BottleProductionDto)
 export class BottleProduction extends BaseEntity<BottleProductionDto> {
-  @Column({ type: 'uuid', nullable: true })
-  customer_id: string | null;
-
   @Column({ type: 'uuid' })
-  supplier_id: string;
+  preform_supplier_id: string;
 
   @Column({ type: 'varchar', length: 255 })
   supplier_name: string;
@@ -76,12 +72,8 @@ export class BottleProduction extends BaseEntity<BottleProductionDto> {
   @Column({ type: 'bigint', nullable: true })
   deleted_at: number | null;
 
-  @ManyToOne(() => Customer, { eager: true })
-  @JoinColumn({ name: 'customer_id', referencedColumnName: 'id' })
-  customer?: Customer;
-
   @ManyToOne(() => Supplier, { eager: true })
-  @JoinColumn({ name: 'supplier_id', referencedColumnName: 'id' })
+  @JoinColumn({ name: 'preform_supplier_id', referencedColumnName: 'id' })
   supplier?: Supplier;
 
   @ManyToOne(() => Product, { eager: true })

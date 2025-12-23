@@ -7,7 +7,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { getUnixTime } from 'date-fns';
 import { FindOptionsWhere, IsNull, Repository } from 'typeorm';
 
-import { CustomersService } from '../customers/customers.service';
 import { ProductsService } from '../shared/products/products.service';
 import { SuppliersService } from '../suppliers/suppliers.service';
 import { CreateBottleProductionDto } from './dto/create-bottle-production.dto';
@@ -20,7 +19,6 @@ export class BottleProductionsService {
   constructor(
     @InjectRepository(BottleProduction)
     private readonly repo: Repository<BottleProduction>,
-    private readonly customersService: CustomersService,
     private readonly suppliersService: SuppliersService,
     private readonly productsService: ProductsService,
   ) {}
@@ -51,7 +49,7 @@ export class BottleProductionsService {
     );
 
     const supplier = await this.suppliersService.findOneByOrFail({
-      id: dto.supplier_id,
+      id: dto.preform_supplier_id,
     });
 
     const preformProduct = await this.productsService.findOneByOrFail({
@@ -62,19 +60,15 @@ export class BottleProductionsService {
       id: dto.bottle_product_id,
     });
 
-    // Validate other entities exist
-    if (dto.customer_id) {
-      await this.customersService.findOneByOrFail({ id: dto.customer_id });
-    }
-
     // Default bottle_color to preform_color if not provided
-    const bottle_color = dto.bottle_color ?? dto.preform_color;
+    const bottle_color = dto.bottle_color ?? preformProduct.colour;
 
     const production = this.repo.create({
       ...dto,
       supplier_name: supplier.business_name,
       preform_name: preformProduct.name,
       bottle_name: bottleProduct.name,
+      preform_color: preformProduct.colour,
       bottle_color,
     });
 
@@ -95,7 +89,6 @@ export class BottleProductionsService {
 
     const qb = this.repo
       .createQueryBuilder('production')
-      .leftJoinAndSelect('production.customer', 'customer')
       .leftJoinAndSelect('production.supplier', 'supplier')
       .leftJoinAndSelect('production.preform_product', 'preform_product')
       .leftJoinAndSelect('production.bottle_product', 'bottle_product')
@@ -112,13 +105,6 @@ export class BottleProductionsService {
           'CAST(production.bottle_size AS TEXT) LIKE :search_query)',
       ).setParameter('search_query', `%${search_query.toLowerCase()}%`);
     }
-
-    // if (customer_id) {
-    //   qb.andWhere('production.customer_id = :customer_id', { customer_id });
-    // } else if (customer_id === null) {
-    //   // Filter for own production (no customer)
-    //   qb.andWhere('production.customer_id IS NULL');
-    // }
 
     if (from_time) {
       qb.andWhere('production.produced_at >= :from_time', {
@@ -154,9 +140,9 @@ export class BottleProductionsService {
     const production = await this.repo.findOne({
       where: { ...query, deleted_at: IsNull() },
       relations: {
-        customer: true,
         supplier: true,
-        product: true,
+        preform_product: true,
+        bottle_product: true,
       },
     });
 
@@ -182,58 +168,9 @@ export class BottleProductionsService {
     this.validateQuantities(preforms_used, preforms_defective, 'preforms');
     this.validateQuantities(bottles_produced, bottles_defective, 'bottles');
 
-    // Handle supplier - if supplier_id provided, validate and populate supplier_name
-    let supplier_name = dto.supplier_name ?? production.supplier_name;
-    const supplier_id =
-      dto.supplier_id !== undefined ? dto.supplier_id : production.supplier_id;
-
-    if (dto.supplier_id !== undefined) {
-      if (dto.supplier_id === null) {
-        // Explicitly setting to null - supplier_name must be provided
-        if (!dto.supplier_name) {
-          throw new BadRequestException(
-            'supplier_name is required when supplier_id is null',
-          );
-        }
-        supplier_name = dto.supplier_name;
-      } else {
-        const supplier = await this.suppliersService.findOneByOrFail({
-          id: dto.supplier_id,
-        });
-        supplier_name = supplier.business_name;
-      }
-    }
-
-    // Validate other entities exist if provided
-    if (dto.customer_id !== undefined) {
-      if (dto.customer_id === null) {
-        // Explicitly setting to null (own production)
-      } else {
-        await this.customersService.findOneByOrFail({ id: dto.customer_id });
-      }
-    }
-
-    if (dto.product_id !== undefined) {
-      if (dto.product_id === null) {
-        // Explicitly setting to null
-      } else {
-        await this.productsService.findOneByOrFail({ id: dto.product_id });
-      }
-    }
-
-    // Default bottle_color to preform_color if not provided and preform_color is being updated
-    let bottle_color = dto.bottle_color;
-    if (!bottle_color && dto.preform_color) {
-      bottle_color = dto.preform_color;
-    } else if (!bottle_color) {
-      bottle_color = production.bottle_color;
-    }
-
     return this.repo.update(production.id, {
       ...dto,
-      supplier_id,
-      supplier_name,
-      bottle_color,
+      bottle_color: dto.bottle_color ?? undefined,
     });
   }
 
