@@ -114,6 +114,12 @@ pnpm run test:e2e
 - `pnpm run format` - Format code
 - `pnpm run migration:create` - Create a new migration
 
+## Contributor Onboarding (Cursor)
+
+- Cursor rule: `.cursor/rules/co-contributor-cursor-rule.md`
+- Onboarding plan: `.cursor/plans/co-contributor_onboarding_plan_4e121374.plan.md`
+- Review the plan/rule before changes, keep TODOs in sync, and follow the documented domain, security, and testing patterns when contributing.
+
 ## Troubleshooting
 
 - Ensure Docker containers are running and healthy.
