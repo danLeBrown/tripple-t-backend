@@ -13,7 +13,7 @@ export class ProductDto extends BaseDto {
 
   @ApiProperty({
     description: 'Size of the product',
-    example: 500,
+    example: 18.5,
   })
   size: number;
 

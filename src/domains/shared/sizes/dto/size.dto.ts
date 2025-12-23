@@ -6,7 +6,7 @@ import { Size } from '../entities/size.entity';
 export class SizeDto extends BaseDto {
   @ApiProperty({
     description: 'Value of the size',
-    example: 42,
+    example: 18.5,
   })
   value: number;
 

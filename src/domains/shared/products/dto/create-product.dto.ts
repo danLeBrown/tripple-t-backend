@@ -13,9 +13,9 @@ export class CreateProductDto {
 
   @ApiProperty({
     description: 'Size of the product',
-    example: 500,
+    example: 18.5,
   })
-  @IsNumber()
+  @IsNumber({ allowNaN: false, allowInfinity: false, maxDecimalPlaces: 2 })
   @IsPositive()
   size: number;
 

@@ -77,6 +77,24 @@ describe('SizesController (e2e)', () => {
 
       request.post('/v1/sizes', req).expect(400, done);
     });
+
+    it('should create a size with decimal value', (done) => {
+      const req = {
+        value: 18.5,
+      } satisfies CreateSizeDto;
+
+      request
+        .post('/v1/sizes', req)
+        .expect(201)
+        .end((err, res) => {
+          if (err) {
+            return done(err);
+          }
+
+          expect(res.body.data.value).toEqual(18.5);
+          return done();
+        });
+    });
   });
 
   describe('it should retrieve sizes', () => {
@@ -182,6 +200,34 @@ describe('SizesController (e2e)', () => {
       request.patch(`/v1/sizes/${size.id}`, req).expect(200, done);
     });
 
+    it('/:id (PATCH) should update a size with decimal value', (done) => {
+      const req = {
+        value: 19.75,
+      } satisfies UpdateSizeDto;
+
+      request
+        .patch(`/v1/sizes/${size.id}`, req)
+        .expect(200)
+        .end((err, _res) => {
+          if (err) {
+            return done(err);
+          }
+
+          // Verify the update by fetching the size
+          request
+            .get(`/v1/sizes/${size.id}`)
+            .expect(200)
+            .end((fetchErr, fetchRes) => {
+              if (fetchErr) {
+                return done(fetchErr);
+              }
+
+              expect(fetchRes.body.data.value).toEqual(19.75);
+              return done();
+            });
+        });
+    });
+
     it('/:id (PATCH) should throw an error if size does not exist', (done) => {
       const req = {
         value: 45,
@@ -194,6 +240,10 @@ describe('SizesController (e2e)', () => {
       let new_size_id: string;
 
       beforeAll(async () => {
+        await sizesService.create({
+          value: 45,
+        });
+
         const l = await sizesService.create({
           value: 46,
         });
@@ -203,7 +253,7 @@ describe('SizesController (e2e)', () => {
 
       it('should throw an error if you try to update a size with an existing value', (done) => {
         const req = {
-          value: 44,
+          value: 45,
         } satisfies UpdateSizeDto;
         request.patch(`/v1/sizes/${new_size_id}`, req).expect(400, done);
       });
