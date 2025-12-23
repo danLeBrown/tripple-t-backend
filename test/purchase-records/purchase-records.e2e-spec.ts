@@ -89,9 +89,8 @@ describe('PurchaseRecordsController (e2e)', () => {
 
       request
         .post(`/v1/purchase-records/suppliers/${supplier.id}`, req)
-        // .expect(201)
+        .expect(201)
         .end((err, res) => {
-          console.log(res.body);
           if (err) {
             return done(err);
           }
