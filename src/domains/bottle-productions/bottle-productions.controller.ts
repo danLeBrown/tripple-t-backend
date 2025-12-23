@@ -19,11 +19,11 @@ import {
 import { PaginatedDto } from '@/common/dto/paginated.dto';
 import { AuditLog } from '@/decorators/audit-log.decorator';
 
-import { CreateBottleProductionDto } from './dto/create-bottle-production.dto';
+import { BottleProductionsService } from './bottle-productions.service';
 import { BottleProductionDto } from './dto/bottle-production.dto';
+import { CreateBottleProductionDto } from './dto/create-bottle-production.dto';
 import { SearchAndPaginateBottleProductionDto } from './dto/query-and-paginate-bottle-production.dto';
 import { UpdateBottleProductionDto } from './dto/update-bottle-production.dto';
-import { BottleProductionsService } from './bottle-productions.service';
 
 @ApiBearerAuth()
 @ApiTags('Bottle Productions')
@@ -32,9 +32,7 @@ import { BottleProductionsService } from './bottle-productions.service';
   model: 'Bottle Productions',
 })
 export class BottleProductionsController {
-  constructor(
-    private bottleProductionsService: BottleProductionsService,
-  ) {}
+  constructor(private bottleProductionsService: BottleProductionsService) {}
 
   @ApiOkResponse({
     description: 'Bottle production created successfully',
@@ -149,4 +147,3 @@ export class BottleProductionsController {
     };
   }
 }
-

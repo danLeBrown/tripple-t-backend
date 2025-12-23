@@ -194,4 +194,3 @@ export class CreateBottleProductionsTable1766496577000
     await queryRunner.dropTable(this.tableName);
   }
 }
-

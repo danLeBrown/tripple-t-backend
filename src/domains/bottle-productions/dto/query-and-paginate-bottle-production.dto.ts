@@ -18,4 +18,3 @@ export class SearchAndPaginateBottleProductionDto extends IntersectionType(
   PaginationDto,
   OrderByDto,
 ) {}
-

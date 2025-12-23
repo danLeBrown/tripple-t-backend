@@ -34,4 +34,3 @@ export class SearchBottleProductionDto extends IntersectionType(
   QueryDto,
   SearchDto,
 ) {}
-

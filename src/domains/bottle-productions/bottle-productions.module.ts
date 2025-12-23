@@ -3,9 +3,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { SharedModule } from '../shared/shared.module';
 import { SuppliersModule } from '../suppliers/suppliers.module';
-import { BottleProduction } from './entities/bottle-production.entity';
 import { BottleProductionsController } from './bottle-productions.controller';
 import { BottleProductionsService } from './bottle-productions.service';
+import { BottleProduction } from './entities/bottle-production.entity';
 
 @Module({
   imports: [
@@ -18,4 +18,3 @@ import { BottleProductionsService } from './bottle-productions.service';
   exports: [BottleProductionsService, TypeOrmModule],
 })
 export class BottleProductionsModule {}
-
