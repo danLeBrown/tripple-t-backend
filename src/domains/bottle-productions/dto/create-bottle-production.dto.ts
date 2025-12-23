@@ -114,10 +114,10 @@ export class CreateBottleProductionDto {
     example: 'Production run completed successfully',
     required: false,
   })
-  @ValidateIf((o) => o.bottles_produced === 0, {
+  @ValidateIf((o) => o.bottles_produced === 0)
+  @IsString()
+  @IsNotEmpty({
     message: 'Notes are required when bottles produced is 0',
   })
-  @IsString()
-  @IsNotEmpty()
-  notes?: string | null;
+  notes?: string;
 }
