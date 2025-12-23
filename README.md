@@ -120,6 +120,15 @@ pnpm run test:e2e
 - Onboarding plan: `.cursor/plans/co-contributor_onboarding_plan_4e121374.plan.md`
 - Review the plan/rule before changes, keep TODOs in sync, and follow the documented domain, security, and testing patterns when contributing.
 
+## Contributing (quick checklist)
+
+- Read the Cursor rule and onboarding plan (paths above) before starting.
+- Follow domain conventions: `domains/{name}/` with dto/entity/controller/service/module, `/v1/{domain}/search`, `PaginatedDto`, `@AuditLog()`, Swagger tags/bearer auth.
+- Security: include CSRF headers for non-GET calls in tests; use `JwtOrApiKeyGuard` unless route is `@UnauthenticatedRoute()`.
+- DTOs/entities: extend BaseDto/BaseEntity, add `@SetDto()`, and use class-validator.
+- Tests: add/extend E2E using `test/setup/app.ts` helpers; cover happy and error paths.
+- Tooling: Node 22 + pnpm; prefer Makefile commands (`make quick-start`, `make test`, `make migrate`, `make seed`).
+
 ## Troubleshooting
 
 - Ensure Docker containers are running and healthy.
