@@ -6,7 +6,7 @@ export class CreateSizeDto {
     description: 'The value of the size',
     example: 42,
   })
-  @IsNumber({ allowNaN: false, allowInfinity: false })
+  @IsNumber({ allowNaN: false, allowInfinity: false, maxDecimalPlaces: 2 })
   @IsPositive()
   value: number;
 }

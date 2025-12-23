@@ -1,5 +1,6 @@
 import { Column, Entity } from 'typeorm';
 
+import { decimalTransformer } from '@/common/transformers/decimal.transformer';
 import { SetDto } from '@/decorators/set-dto.decorator';
 
 import { BaseEntity } from '../../../../common/base.entity';
@@ -15,7 +16,12 @@ export class Product extends BaseEntity<ProductDto> {
   @Column({ type: 'varchar', length: 255 })
   type: ProductType;
 
-  @Column({ type: 'int' })
+  @Column({
+    type: 'numeric',
+    precision: 10,
+    scale: 2,
+    transformer: decimalTransformer,
+  })
   size: number;
 
   @Column({ type: 'varchar', length: 255 })
