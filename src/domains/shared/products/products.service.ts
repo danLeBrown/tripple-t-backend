@@ -3,6 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getUnixTime } from 'date-fns/getUnixTime';
 import { FindOptionsWhere, Not, Repository } from 'typeorm';
@@ -13,6 +14,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { SearchAndPaginateProductDto } from './dto/query-and-paginate-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
+import { IProductCreatedEvent } from './events';
 import { generateProductName } from './helpers';
 
 @Injectable()
@@ -20,6 +22,7 @@ export class ProductsService {
   constructor(
     @InjectRepository(Product)
     private readonly repo: Repository<Product>,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   private generateSlug(data: {
@@ -50,7 +53,14 @@ export class ProductsService {
       name: generateProductName(dto),
     });
 
-    return this.repo.save(product);
+    const savedProduct = await this.repo.save(product);
+
+    // Emit product.created event
+    await this.eventEmitter.emitAsync('product.created', {
+      product: savedProduct,
+    } satisfies IProductCreatedEvent);
+
+    return savedProduct;
   }
 
   async search(query: SearchAndPaginateProductDto) {

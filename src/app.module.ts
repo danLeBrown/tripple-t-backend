@@ -21,6 +21,7 @@ import { ExpensesModule } from './domains/expenses/expenses.module';
 import { NotificationsModule } from './domains/notifications/notifications.module';
 import { PurchaseRecordsModule } from './domains/purchase-records/purchase-records.module';
 import { SharedModule } from './domains/shared/shared.module';
+import { StocksModule } from './domains/stocks/stocks.module';
 import { SuppliersModule } from './domains/suppliers/suppliers.module';
 import { UploadsModule } from './domains/uploads/uploads.module';
 import { WebhooksModule } from './domains/webhooks/webhooks.module';
@@ -85,6 +86,7 @@ import { ValidatorsModule } from './validators/validators.module';
     SuppliersModule,
     PurchaseRecordsModule,
     BottleProductionsModule,
+    StocksModule,
   ],
   controllers: [AppController],
   providers: [
