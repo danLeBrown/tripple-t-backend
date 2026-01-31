@@ -124,7 +124,6 @@ export class StocksService {
       const stock = await manager.findOne(Stock, {
         where: { product_id: productId },
         lock: { mode: 'pessimistic_write' },
-        relations: ['product'],
       });
 
       if (!stock) {
