@@ -40,11 +40,11 @@ export function setupDatabase(exe: StartedPostgreSqlContainer) {
   //   .withExposedPorts(5432)
   //   .start();
 
-  process.env.DB_HOST = exe.getHost();
-  process.env.DB_PORT = exe.getMappedPort(5432).toString();
-  process.env.DB_USERNAME = exe.getUsername();
-  process.env.DB_PASSWORD = exe.getPassword();
-  process.env.DB_DATABASE = exe.getDatabase();
+  process.env.DATABASE_URL = `postgres://${exe.getUsername()}:${exe.getPassword()}@${exe.getHost()}:${exe.getMappedPort(5432)}/${exe.getDatabase()}`;
+  // process.env.DB_PORT = exe.getMappedPort(5432).toString();
+  // process.env.DB_USERNAME = exe.getUsername();
+  // process.env.DB_PASSWORD = exe.getPassword();
+  // process.env.DB_DATABASE = exe.getDatabase();
 }
 
 export function setupRedis(exe: StartedRedisContainer) {
