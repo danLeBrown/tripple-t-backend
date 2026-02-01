@@ -1,0 +1,15 @@
+# Preview Deployer Configuration
+# Place this file in your repository root
+
+framework: nestjs # Options: nestjs, go
+database: postgres # Options: postgres, mysql, mongodb
+health_check_path: / # Health check endpoint path
+
+# Optional: Custom build commands
+# build_commands:
+#   - npm install
+#   - npm run build
+
+# Optional: Environment variables
+env:
+  - NODE_ENV=preview
