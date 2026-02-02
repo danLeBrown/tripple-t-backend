@@ -21,4 +21,4 @@ env_file: .env
 
 startup_commands:
   - pnpm run migration:prod:run
-  - pnpm run seed
+  # - pnpm run seed
