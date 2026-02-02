@@ -18,3 +18,7 @@ env:
   - NODE_ENV=preview
 
 env_file: .env
+
+startup_commands:
+  - pnpm run migration:prod:run
+  - pnpm run seed
