@@ -60,6 +60,9 @@ RUN pnpm install --frozen-lockfile --prod
 # Copy built application from build stage
 COPY --from=build /app/dist ./dist
 
+# Copy seeding config (used by seed/seed:class scripts)
+COPY --from=build /app/seeding-source.js ./
+
 # Create non-root user for security
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nestjs -u 1001
